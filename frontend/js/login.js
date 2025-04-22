@@ -11,8 +11,8 @@ signInButton.addEventListener('click', () => {
 });
 function onSubmit(){
     
-    let username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
+    let username = document.getElementById("sign-in-username").value;
+    let password = document.getElementById("sign-in-password").value;
     
     
 
@@ -27,7 +27,7 @@ function onSubmit(){
             body: JSON.stringify({username, password})
         }).then(response =>{
             if (response.ok){
-                console.log("logged in");
+                console.log("logged in Successully");
                 
                 return response.json();
                 
@@ -42,7 +42,6 @@ function onSubmit(){
             if (data.token) {
                 localStorage.setItem("auth_token", data.token); // Store token
                 
-                // window.location.href = "chat.html"; // Redirect to chat page
             } else {
                 alert("Login failed");
             }
@@ -58,22 +57,30 @@ function register(){
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
         let email= document.getElementById("email").value;
+        let firstname= document.getElementById("firstname").value;
+        let lastname= document.getElementById("lastname").value;
+        let address= document.getElementById("address").value;
+        let phone= document.getElementById("phone").value;
         
         
     
         console.log("Username:", username);
         console.log("Password:", password);
         console.log("Email:",email);
+        console.log("Firstname:",firstname);
+        console.log("Lastname:",lastname);
+        console.log("Address:",address);
+        console.log("Phone:",phone);
         
             const response =  fetch("http://localhost:3000/register", {
                 method: 'POST',
                 mode:'cors',
                 headers:{'Content-Type':'application/json'},
                 credentials:'include',
-                body: JSON.stringify({username, password,email})
+                body: JSON.stringify({username, password,email, firstname,lastname,address,phone})
             }).then(response =>{
                 if (response.ok){
-                    console.log("registered");
+                    console.log("registered SUccessfully");
                     
                     
                     return response.json();
@@ -87,7 +94,6 @@ function register(){
                 console.log(data);
                 alert("Registered");
 
-                window.location.href = "index.html";
             }).catch((err) => {
                 alert("Erreur: " + err.message);
             });
