@@ -11,4 +11,4 @@ export interface User {
   created_at: Date; // Timestamp
 }
 
-export type CreateUserPayload = Omit<User, 'id' | 'created_at'> ;
+export type NewUser = Omit<User, 'id' | 'created_at'> ;
