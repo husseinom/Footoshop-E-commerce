@@ -19,7 +19,7 @@ function onSubmit(){
     console.log("Username:", username);
     console.log("Password:", password);
     
-        const response =  fetch("http://localhost:3000/login", {
+        const response =  fetch("http://localhost:4000/login", {
             method: 'POST',
             mode:'cors',
             headers:{'Content-Type':'application/json'},
@@ -28,6 +28,7 @@ function onSubmit(){
         }).then(response =>{
             if (response.ok){
                 console.log("logged in Successully");
+                alert("logged in Successully");
                 
                 return response.json();
                 
@@ -57,32 +58,30 @@ function register(){
         let username = document.getElementById("username").value;
         let password = document.getElementById("password").value;
         let email= document.getElementById("email").value;
-        let firstname= document.getElementById("firstname").value;
-        let lastname= document.getElementById("lastname").value;
+        let first_name = document.getElementById("first_name").value;          
+        let last_name = document.getElementById("last_name").value;    
         let address= document.getElementById("address").value;
-        let phone= document.getElementById("phone").value;
+        let mobile_number= document.getElementById("mobile_number").value;
         
         
     
         console.log("Username:", username);
         console.log("Password:", password);
         console.log("Email:",email);
-        console.log("Firstname:",firstname);
-        console.log("Lastname:",lastname);
+        console.log("Firstname:",first_name);
+        console.log("Lastname:",last_name);
         console.log("Address:",address);
-        console.log("Phone:",phone);
+        console.log("Phone:",mobile_number);
         
-            const response =  fetch("http://localhost:3000/register", {
+            const response =  fetch("http://localhost:4000/register", {
                 method: 'POST',
                 mode:'cors',
                 headers:{'Content-Type':'application/json'},
                 credentials:'include',
-                body: JSON.stringify({username, password,email, firstname,lastname,address,phone})
+                body: JSON.stringify({username, password,email, first_name,last_name,address,mobile_number})
             }).then(response =>{
                 if (response.ok){
-                    console.log("registered SUccessfully");
-                    
-                    
+                    console.log("registered Successfully");
                     return response.json();
                     
                     
