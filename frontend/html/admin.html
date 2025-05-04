@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashbord</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Top Navigation Bar -->
+      <nav class="topbar">
+        <div class="topbar-left">
+          <button class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="logo">Dashboard</h1>
+        </div>
+        <div class="topbar-right">
+          <div class="search-box">
+            <input type="text" placeholder="Search..." />
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="theme-toggle" id="themeToggle">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-moon"></i>
+            <span class="toggle-ball"></span>
+          </div>
+          <div class="user-profile" id="userProfile">
+            <div class="profile-trigger">
+                <i class="fa-solid fa-user"></i>
+              <span>omar11</span>
+              <i class="fa-solid fa-angle-down dropdown-icon"></i>
+            </div>
+            <div class="profile-dropdown">
+              <!-- <a href="#"><i class="fa-solid fa-gear"></i> Settings</a> -->
+              <!-- <a href="#"
+                ><i class="fa-solid fa-envelope"></i> Messages
+                <span class="badge">3</span></a
+              > -->
+              <div class="dropdown-divider"></div>
+              <a href="#"
+                ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
+              >
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-menu">
+          <div class="sidebar-header">
+            <span>Admin Panel</span>
+          </div>
+          <ul class="menu-items">
+            <li class="menu-item active">
+              <a href="#">
+                <i class="fa-solid fa-house"></i>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="menu-item has-submenu">
+              <a href="#">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Products</span>
+                <i class="fa-solid fa-angle-down dropdown-icon"></i>
+              </a>
+              <ul class="submenu">
+                <li><a href="productsAdmin.html">All Products</a></li>
+                <li><a href="#">Categories</a></li>
+              </ul>
+            </li>
+            <li class="menu-item has-submenu">
+              <a href="#">
+                <i class="fa-solid fa-users"></i>
+                <span>Users</span>
+                <i class="fa-solid fa-angle-down dropdown-icon"></i>
+              </a>
+              <ul class="submenu">
+                <li><a href="#">All Users</a></li>
+                <li><a href="#">Roles</a></li>
+                <li><a href="#">Permissions</a></li>
+              </ul>
+            </li>
+            <!-- <li class="menu-item">
+              <a href="#">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Analytics</span>
+              </a>
+            </li> -->
+            <!-- <li class="menu-item">
+              <a href="#">
+                <i class="fa-solid fa-envelope"></i>
+                <span>Messages</span>
+                <span class="badge">5</span>
+              </a>
+            </li> -->
+            <!-- <li class="menu-item has-submenu">
+              <a href="#">
+                <i class="fa-solid fa-gear"></i>
+                <span>Settings</span>
+                <i class="fa-solid fa-angle-down dropdown-icon"></i>
+              </a>
+              <ul class="submenu">
+                <li><a href="#">General</a></li>
+                <li><a href="#">Security</a></li>
+                <li><a href="#">Notifications</a></li>
+                <li><a href="#">Appearance</a></li>
+              </ul>
+            </li> -->
+            <li class="menu-item">
+              <a href="#">
+                <i class="fa-solid fa-circle-question"></i>
+                <span>Help</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content" id="mainContent">
+        <div class="content-header">
+          <h2>Welcome to your Dashboard</h2>
+          <p>Manage your content and settings from here</p>
+        </div>
+        <div class="content-body">
+          <div class="card">
+            <h3>Add New Product</h3>
+            <form id="ProductForm", class="addForm">
+              <input type="number" id="productId" name="product_id" placeholder="Product ID (Empty for new product)" min="0" />
+              <input type="text" id="productTitle" name="title" placeholder="Product Title" required />
+              <input type="number" id="productPrice" name="price" placeholder="Price" min="1" required />
+              <select name="condition" id="condition-select">
+                <option value="">--Please choose product condition--</option>
+                <option value="new">New</option>
+                <option value="used">Used</option>
+              </select>
+          
+              <select id="genderCategory" name="genderCategory" required>
+                  <option value="" disabled selected>Select Gender Category</option>
+                  <!-- Options populated dynamically -->
+              </select>
+          
+              <select id="typeCategory" name="typeCategory" required>
+                  <option value="" disabled selected>Select Type Category</option>
+                  <!-- Options populated dynamically -->
+              </select>
+          
+              <textarea id="productDescription" name="description" placeholder="Description" ></textarea>
+          
+              <!-- New Size + Quantity fields -->
+              <div class="size-quantity-wrapper">
+                  <label for="size">Select Size</label>
+                  <select id="size" name="size" required>
+                      <option value="" disabled selected>Select Size</option>
+                      <!-- Sizes 30 to 50 -->
+                      <script>
+                        for (let i = 30; i <= 50; i++) {
+                            document.write(`<option value="${i}">${i}</option>`);
+                        }
+                      </script>
+                  </select>
+          
+                  <label for="quantity">Quantity</label>
+                  <input type="number" id="quantity" name="quantity" placeholder="Quantity" min="1" required />
+              </div>
+          
+              <div id="imageUploadSection">
+                <label for="productImages">Upload Product Images</label>
+                <input type="file" id="productImages" name="images" multiple accept="image/*" />
+                <div id="imagePreviewContainer"></div>
+              </div>
+              
+              <!-- Optional section to allow selecting primary image -->
+              <div>
+                <label for="primaryImageSelect">Select Primary Image:</label>
+                <select id="primaryImageSelect">
+                  <!-- dynamically populated options from image previews -->
+                </select>
+              </div>
+          
+              <button type="submit">Add Product</button>
+          </form>
+          </div>
+          <div class="card">
+            <h3>Add New User</h3>
+            <form id="UserForm", class="addForm">
+              <input type="text"  id="username" placeholder="Username" required/>
+              <input type="email" id="email" placeholder="Email" required/>
+              <input type="password" id="password" placeholder="Password" required/>
+              <input type="text" id="first_name" placeholder="First Name" required/>
+              <input type="text" id="last_name" placeholder="Last Name" required/>
+              <input type="text" id="address" placeholder="Address(optionnal)" />
+              <input type="tel" id="mobile_number" placeholder="Phone Number(optionnal)" />
+              <label for="role-select">Choose a role:</label>
+
+              <select name="role" id="role-select">
+                <option value="">--Please choose a role--</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+              <button type="submit">Add User</button>
+            </form>
+          </div>
+          <div class="card">
+            <h3>Add New Category</h3>
+            <form id="CategoryForm"class="addForm">
+              <input type="text"  id="name" placeholder="Name" required/>
+              <input type="text" id="slug" placeholder="Same as Name but in lowercase " required/>
+              <label for="is_gender-select">Choose a role:</label>
+
+              <select name="is_gender" id="is_gender-select">
+                <option value="">--Is this a gender category--</option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+              </select>
+              <button type="submit">Add Category</button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/admin.js"></script>
+  </body>
+</html>

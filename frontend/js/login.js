@@ -9,48 +9,44 @@ signUpButton.addEventListener('click', () => {
 signInButton.addEventListener('click', () => {
 	container.classList.remove("right-panel-active");
 });
-function onSubmit(){
-    
+async function onSubmit() {
     let username = document.getElementById("sign-in-username").value;
     let password = document.getElementById("sign-in-password").value;
-    
-    
 
-    console.log("Username:", username);
-    console.log("Password:", password);
-    
-        const response =  fetch("http://localhost:4000/login", {
+    try {
+        const response = await fetch("http://localhost:4000/login", {
             method: 'POST',
-            mode:'cors',
-            headers:{'Content-Type':'application/json'},
-            credentials:'include',
-            body: JSON.stringify({username, password})
-        }).then(response =>{
-            if (response.ok){
-                console.log("logged in Successully");
-                alert("logged in Successully");
-                
-                return response.json();
-                
-                
-            }
-            else{
-                throw new Error("wrong Username or password");
-            }
-        }).then(data =>{
-            console.log(data);
-            console.log(data.token)
-            if (data.token) {
-                localStorage.setItem("auth_token", data.token); // Store token
-                
-            } else {
-                alert("Login failed");
-            }
-        }).catch((err) => {
-            alert("Erreur: " + err.message);
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ username, password })
         });
-    
+
+        if (!response.ok) {
+            throw new Error("Wrong username or password");
+        }
+
+        const data = await response.json();
+        console.log(data);
+
+        if (data.token) {
+            localStorage.setItem("auth_token", data.token); // Store token
+            alert("Logged in successfully");
+
+            if (data.user.role === "admin") {
+                window.location.href = "admin.html"; // Redirect to admin page
+            } else {
+                window.location.href = "main.html";
+            }
+        } else {
+            alert("Login failed");
+        }
+
+    } catch (err) {
+        alert("Erreur: " + err.message);
+    }
 }
+
 
 function register(){
     
@@ -82,6 +78,7 @@ function register(){
             }).then(response =>{
                 if (response.ok){
                     console.log("registered Successfully");
+                    
                     return response.json();
                     
                     

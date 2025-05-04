@@ -3,178 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Footoshop - Premium Sneakers</title>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <title>Footoshop</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="top-bar-left">
-                <span><i class="fas fa-phone"></i> +33 695 658 319</span>
-                <span><i class="fas fa-envelope"></i> admin@footoshop.com</span>
-            </div>
-            <div class="top-bar-right">
-                <a href="login.html">Login / Register</a>
+    <div class="top_nav">
+        <div class="container top_nav_container">
+            <div class="top_nav_wrapper">
+                <p class="top_nav_p">
+                    LIMITED TIME OFFERS !
+                </p>
+                <a href="#" class="top_nav_link">SHOP NOW</a>
             </div>
         </div>
     </div>
-
-    <!-- Header -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <a href="main.html">
-                    <h1>Footoshop</h1>
-                </a>
-            </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Search for products...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-            <div class="header-right">
-                <div class="wishlist">
-                    <a href="wishlist.html">
-                        <i class="fas fa-heart"></i>
-                        <span class="wishlist-count">0</span>
-                    </a>
-                </div>
-                <div class="cart">
-                    <a href="cart.html">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="container">
-            <ul>
-                <li><a href="main.html" class="active">Home</a></li>
-                <li><a href="shop.html">Shop</a></li>
-                <li class="dropdown">
-                    <a href="#">Categories <i class="fas fa-chevron-down"></i></a>
+    <nav class="nav">
+        <div class="container nav_container">
+            <a href="main.html" class="nav_logo">FOOTOSHOP</a>
+            <ul class="nav_list">
+                <!-- <li class="nav_item"><a href="#" class="nav_link">Home</a></li>
+                <li class="nav_item"><a href="#" class="nav_link">Men</a></li>
+                <li class="nav_item"><a href="#" class="nav_link">Women</a></li>
+                <li class="nav_item"><a href="#" class="nav_link">Kids</a></li> -->
+                <!-- <li class="nav_item dropdown">
+                    <a href="#" class="nav_link">Categories <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Running</a></li>
-                        <li><a href="#">Basketball</a></li>
                         <li><a href="#">Lifestyle</a></li>
-                        <li><a href="#">Training</a></li>
-                    </ul>
-                </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                        <li><a href="#">Sneakers</a></li>
+                        <li><a href="#">Sports</a></li>
+                    </ul> -->
+                <!-- </li> -->
+                <form action="#" class="nav_form">
+                    <input type="text" class="nav_input" placeholder="What are you looking for?">
+                    <i class="fas fa-search"></i>
+                </form>
+                <!-- <li class="nav_item"><a href="#" class="nav_link_limited">Limited Offers</a></li> -->
+                <!-- <li class="nav_item"><a href="#" class="nav_link">Login/Register</a></li> -->
             </ul>
+            <div class="nav_items">
+                
+                
+                    <div class="wishlist">
+                        <a href="wishlist.html">
+                            <i class="fas fa-heart"></i>
+                            <span class="wishlist-count">0</span>
+                        </a>
+                    </div>
+                    <div class="cart" onclick="displayCartItems()" >
+                        <a href="cart.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                    </div>
+                    <div class="profile">
+                        <a href="login.html">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </div>
+                    
+                </a>
+                
+                
+            </div>
         </div>
     </nav>
-
-    <!-- Hero Slider -->
-    <div class="hero-slider">
-        <div class="slide active">
-            <div class="slide-content">
-                <h2>New Collection 2024</h2>
-                <p>Discover our latest premium sneakers</p>
-                <a href="shop.html" class="btn">Shop Now</a>
+    <header class="header">
+        <div class="container header_container">
+            <div class="header_filter">
+                <a href="main.html" class="header_filter_link">Home</a>
+                <a href="#" class="header_filter_link">Men</a>
+                <a href="#" class="header_filter_link">Women</a>
+                <a href="#" class="header_filter_link">Kids</a>
+                <a href="#" class="header_filter_limited">Limited Offers</a>
+                <a href="#" class="header_filter_link">Contact Us</a>
+                <a href="#" class="header_filter_link">About</a>
+            </div>
+            <img src="../assets/headers_img/headeropt.png" alt="" class="header_img">
+        </div>
+    </header>
+    <section class="section">
+        <div class="container">
+            <div class="section_category">
+                <p class="section_category_p">Today</p>
+            </div>
+            <div class="section_header">
+                <h3 class="section_title">Our latest items</h3>
+                
+            </div>
+            <!-- Swiper -->
+            <div class="swiper">
+                <div class="swiper-wrapper" id="swiper-wrapper">
+                  <!-- JS will inject slides here -->
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            <div class="container_btn">
+                <a href="" class="container_btn_a">VIEW ALL PRODUCTS</a>
             </div>
         </div>
-    </div>
-
-    <!-- Featured Categories -->
-    <section class="featured-categories">
+    </section>
+    <section class="section">
         <div class="container">
-            <h2 class="section-title">Shop by Category</h2>
-            <div class="category-grid">
-                <div class="category-card">
-                    <img src="../images/running.jpg" alt="Running">
-                    <div class="category-content">
-                        <h3>Running</h3>
-                        <a href="#" class="btn-outline">View All</a>
-                    </div>
+            <div class="section_category">
+                <p class="section_category_p">Categories</p>
+            </div>
+            <div class="section_header">
+                <h3 class="section_title">Browse by categories</h3>
+                
+            </div>
+            <div class="categories">
+                <div class="category">
+                    <a href="" class="category_link">
+                        <img src="../assets/icons_img/running.png" alt="" class="category_icon">
+                        <p class="category_name">Running</p>
+                    </a>
+                    
                 </div>
-                <div class="category-card">
-                    <img src="../images/basketball.jpg" alt="Basketball">
-                    <div class="category-content">
-                        <h3>Basketball</h3>
-                        <a href="#" class="btn-outline">View All</a>
-                    </div>
+                <div class="category">
+                    <a href="" class="category_link">
+                        <img src="../assets/icons_img/lifestyle.jpg" alt="" class="category_icon">
+                        <p class="category_name">Lifestyle</p>
+                    </a>
+                    
                 </div>
-                <div class="category-card">
-                    <img src="../images/lifestyle.jpg" alt="Lifestyle">
-                    <div class="category-content">
-                        <h3>Lifestyle</h3>
-                        <a href="#" class="btn-outline">View All</a>
-                    </div>
+                <div class="category">
+                    <a href="" class="category_link">
+                        <img src="../assets/icons_img/sneakers.png" alt="" class="category_icon">
+                        <p class="category_name">Sneakers</p>
+                    </a>
+                    
+                </div>
+                <div class="category">
+                    <a href="" class="category_link">
+                        <img src="../assets/icons_img/tennis.png" alt="" class="category_icon">
+                        <p class="category_name">Tennis</p>
+                    </a>
+                    
+                </div>
+                <div class="category">
+                    <a href="" class="category_link">
+                        <img src="../assets/icons_img/basketball.png" alt="" class="category_icon">
+                        <p class="category_name">Basketball</p>
+                    </a>
+                    
+                </div>
+                <div class="category">
+                    <a href="" class="category_link">
+                        <img src="../assets/icons_img/football.jpg" alt="" class="category_icon">
+                        <p class="category_name">Football</p>
+                    </a>
+                    
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Featured Products -->
-    <section class="featured-products">
-        <div class="container">
-            <h2 class="section-title">Featured Products</h2>
-            <div class="product-grid">
-                <!-- Products will be dynamically loaded here -->
+    <section class="section">
+        <div class="container services_container">
+            <div class="service">
+                <i class="fas fa-headset"></i>
+                <h3 class="service_title">24/7 Support</h3>
+                <p class="service_p">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium doloremque, sed velit cumque, tempore rerum consequuntur fugit, ipsum rem expedita esse magnam quaerat explicabo asperiores ut enim reiciendis nobis delectus.</p>
+            </div>
+            <div class="service">
+                <i class="fa-sharp fa-solid fa-truck"></i>
+                <h3 class="service_title">Free Shipping</h3>
+                <p class="service_p">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium doloremque, sed velit cumque, tempore rerum consequuntur fugit, ipsum rem expedita esse magnam quaerat explicabo asperiores ut enim reiciendis nobis delectus.</p>
+            </div>
+            <div class="service">
+                <i class="fas fa-tags"></i>
+                <h3 class="service_title">Best Price</h3>
+                <p class="service_p">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium doloremque, sed velit cumque, tempore rerum consequuntur fugit, ipsum rem expedita esse magnam quaerat explicabo asperiores ut enim reiciendis nobis delectus.</p>
             </div>
         </div>
     </section>
-
-    <!-- Newsletter -->
-    <section class="newsletter">
-        <div class="container">
-            <div class="newsletter-content">
-                <h2>Subscribe to Our Newsletter</h2>
-                <p>Get updates about new products and special offers</p>
-                <form>
-                    <input type="email" placeholder="Enter your email">
-                    <button type="submit" class="btn">Subscribe</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h3>About Us</h3>
-                    <p>Premium sneaker marketplace offering authentic footwear from top brands.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+        <div class="container footer_container">
+            <div class="footer_item">
+                <a href="#" class="footer_logo">Footoshop</a>
+                <div class="footer_p">
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta in, nesciunt obcaecati odio nulla sapiente cum quis voluptate officiis reiciendis accusantium magni fuga laboriosam aut quas vero mollitia iste expedita!
+                    <div class="footer_bottom_icons">
+                        <a href="#" class="footer_bottom_icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="footer_bottom_icon"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Shop</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Customer Service</h3>
-                    <ul>
-                        <li><a href="#">Shipping Policy</a></li>
-                        <li><a href="#">Returns Policy</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Size Guide</a></li>
-                    </ul>
-                </div>
+            </div>
+            <div class="footer_item">
+               <h3 class="footer_item_title">Contact Us</h3>
+                <ul class="footer_list">
+                    <li class="footer_list_item">Montpellier, France</li>
+                    <li class="footer_list_item">admin@footoshop.fr</li>
+                    <li class="footer_list_item">+33 695 658 319</li>
+                </ul> 
+            </div>
+            <div class="footer_item">
+                <h3 class="footer_item_title">Policy</h3>
+                <ul class="footer_list">
+                    <li class="footer_list_item">Privacy Policy</li>
+                    <li class="footer_list_item">Terms and Conditions</li>
+                    <li class="footer_list_item">FAQ's</li>
+                </ul> 
+            </div>
+            <div class="footer_item">
+                <h3 class="footer_item_title">About Us</h3>
+                <ul class="footer_list">
+                    <li class="footer_list_item">Our purpose</li>
+                    <li class="footer_list_item">Careers</li>
+                    <li class="footer_list_item">Who we are</li>
+                </ul> 
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Footoshop. All rights reserved.</p>
+        <div class="footer_bottom">
+            <div class="footer_bottom_container">
+                <p class="footer_bottom_p">Copyright &copy; 2025 Footoshop. All rights reserved.
+                </p>
+                
+            </div>
+            
         </div>
     </footer>
-
-    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="../js/cart.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/wishlist.js"></script>
 </body>
 </html>
