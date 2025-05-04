@@ -26,7 +26,7 @@ export async function registerUser(ctx: Context) {
             last_name,
             address,
             mobile_number,
-            role: 'user',
+            role: 'admin',
         });
 
         ctx.response.status = 201;

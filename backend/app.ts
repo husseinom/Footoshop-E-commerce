@@ -24,7 +24,7 @@ console.log(`Oak back server running on port ${options.port}`);
 
 
 app.use(oakCors({
-  origin: "http://localhost:5500",
+  origin: "http://localhost:5501",
   credentials: true
 }))
 app.use(authRoute.routes());
