@@ -1,8 +1,6 @@
 import{Context} from "https://deno.land/x/oak@v17.1.4/mod.ts";
-import { createProductOrAddVariant, getAllProductsAdmin, getAllProductsUser, getProductBytitle, getProductbyGenderCategory, getProductbyTypeCategory, deleteProductById, getLatestProductsWithImage  } from "../models/Product.ts";
-import { getUserByUsername, getUserById } from "../models/User.ts";
+import { createProductOrAddVariant, getAllProductsAdmin, getAllProductsUser, getProductBytitle, getProductbyGenderCategory, getProductbyTypeCategory, deleteProductById, getLatestProductsWithImage, getProductById, getProductsFiltred  } from "../models/Product.ts";
 import { ProductCreatePayload } from "../types/product.ts";
-import { multiParser } from "https://deno.land/x/multiparser@0.114.0/mod.ts";
 import { join } from "https://deno.land/std@0.224.0/path/mod.ts";; // To join paths safely
 export async function newProduct(ctx: Context){
     console.log("reached newUser");
@@ -66,7 +64,8 @@ export async function AllProductsUsers(ctx: Context) {
     try {
         const products = await getAllProductsUser();
         ctx.response.status = 200;
-        ctx.response.body = { products };
+        ctx.response.body = products ;
+        console.log("Products: ", products);
     } catch (error) {
         ctx.response.status = 500;
         ctx.response.body = { message: "Failed to retrieve products", error: error.message };
@@ -96,6 +95,18 @@ export async function DeleteProducts(ctx: Context){
         ctx.response.body = { message: "Failed to delete product", error: error.message };
     }
 }
+export async function getSingleProduct(ctx: Context){
+    try{
+        const ProductId= ctx.params.id;
+        const product = await getProductById(ProductId);
+        console.log("Product :", product);
+        ctx.response.status = 200;
+        ctx.response.body = product;
+    }catch (error) {
+        ctx.response.status = 500;
+        ctx.response.body = { message: "Failed to retrieve product", error: error.message };
+    }
+}
 
 export async function getLatestProducts(ctx: Context) {
     try {
@@ -112,6 +123,64 @@ export async function getLatestProducts(ctx: Context) {
       console.error("Failed to fetch latest products:", err);
       ctx.response.status = 500;
       ctx.response.body = { error: "Internal Server Error" };
+    }
+}
+export async function getProductsByGender(ctx: Context) {
+    try {
+      const url = new URL(ctx.request.url);
+      console.log(`got url ${url.pathname}`);
+      const GenderId = Number(url.searchParams.get("CategoryId"));
+      const products = await getProductbyGenderCategory(GenderId);
+      ctx.response.status = 200;
+      console.log("Products categories : ", products);
+      ctx.response.body = products;
+    }catch (error) {
+        ctx.response.status = 500;
+        ctx.response.body = { message: "Failed to retrieve products", error: error.message };
+    }
+
+}
+
+export async function getProductsByType(ctx: Context) {
+    try {
+      const url = new URL(ctx.request.url);
+      console.log(`got url ${url.pathname}`);
+      const TypeId = Number(url.searchParams.get("TypeId"));
+      const products = await getProductbyTypeCategory(TypeId);
+      ctx.response.status = 200;
+      console.log("Products categories : ", products);
+      ctx.response.body = products;
+    }catch (error) {
+        ctx.response.status = 500;
+        ctx.response.body = { message: "Failed to retrieve products", error: error.message };
+    }
+
+}
+
+export async function filterProducts(ctx: Context){
+    try{
+        const url = new URL(ctx.request.url);
+        console.log(`got url ${url.pathname}`);
+        const genderId = url.searchParams.getAll("categories").map(Number);
+        console.log("genderId", genderId);
+        const typeId = url.searchParams.getAll("subCategories").map(Number);
+        console.log("typeId", typeId);
+        const minPrice = Number(url.searchParams.get("priceMin"));
+        console.log("minPrice", minPrice);
+        const maxPrice = Number(url.searchParams.get("priceMax"));
+        console.log("maxPrice", maxPrice);
+        const minSize = Number(url.searchParams.get("sizeMin"));
+        console.log("minSize", minSize);
+        const maxSize = Number(url.searchParams.get("sizeMax"));
+        console.log("maxSize", maxSize);
+
+        const products = await getProductsFiltred(genderId, typeId, minPrice, maxPrice, minSize, maxSize);
+        console.log("Products categories : ", products);
+        ctx.response.status = 200;
+        ctx.response.body = products;
+    }catch (error) {
+        ctx.response.status = 500;
+        ctx.response.body = { message: "Failed to retrieve products", error: error.message };
     }
 }
 

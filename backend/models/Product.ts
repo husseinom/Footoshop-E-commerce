@@ -80,84 +80,74 @@ export async function createProductOrAddVariant(product: ProductCreatePayload): 
   
 
 export async function getProductbyGenderCategory(gender_category_id: number): Promise<ProductPayload[]> {
-    const result = await db.query(
-        `SELECT 
-         p.id, p.seller_id, p.title, p.created_price, p.actual_price,
-         p.condition, p.gender_category_id, p.type_category_id,
-         p.description, p.created_at, p.updated_at,
-         u.username as seller_username
-        FROM products p
-        JOIN users u ON p.seller_id = u.id
-        WHERE p.gender_category_id = ? AND p.is_approved = TRUE AND p.is_available = TRUE
-        ORDER BY p.created_at DESC`,[gender_category_id]
+    const products = await db.queryEntries<{
+    id: number;
+    title: string;
+    actual_price: number;
+    image_path: string | null;
+  }>(
+        `SELECT p.id, p.title, p.actual_price, pi.image_path
+    FROM products p
+    LEFT JOIN product_images pi
+      ON pi.product_id = p.id AND pi.is_primary = 1
+    WHERE p.is_approved = 1 AND p.is_available = 1 AND p.gender_category_id = ?
+    ORDER BY p.created_at DESC`,[gender_category_id]
     );
-    return result.map((row: any) => ({
-      id: row[0],
-      seller_id: row[1],
-      title: row[2],
-      created_price: row[3],
-      actual_price: row[4],
-      condition: row[5],
-      gender_category_id: row[6],
-      type_category_id: row[7],
-      description: row[8],
-      created_at: new Date(row[9]),
-      updated_at: row[10] ? new Date(row[10]) : undefined,
-    }));
+    return products
 }
 export async function getProductbyTypeCategory(type_category_id: number): Promise<ProductPayload[]> {
-    const result = await db.query(
-        `SELECT 
-         p.id, p.seller_id, p.title, p.base_price, p.current_price,
-         p.condition, p.gender_category_id, p.type_category_id,
-         p.description, p.created_at, p.updated_at,
-         u.username as seller_username
-       FROM products p
-       JOIN users u ON p.seller_id = u.id
-       WHERE p.type_category_id = ? AND p.is_approved = TRUE AND p.is_available = TRUE
-       ORDER BY p.created_at DESC`,[type_category_id]
+    const products = await db.queryEntries<{
+    id: number;
+    title: string;
+    actual_price: number;
+    image_path: string | null;
+  }>(
+        `SELECT p.id, p.title, p.actual_price, pi.image_path
+    FROM products p
+    LEFT JOIN product_images pi
+      ON pi.product_id = p.id AND pi.is_primary = 1
+    WHERE p.is_approved = 1 AND p.is_available = 1 AND p.type_category_id = ?
+    ORDER BY p.created_at DESC`,[type_category_id]
     );
-    return result.map((row: any) => ({
-        id: row[0],
-        seller_id: row[1],
-        title: row[2],
-        base_price: row[3],
-        current_price: row[4],
-        condition: row[5],
-        gender_category_id: row[6],
-        type_category_id: row[7],
-        description: row[8],
-        created_at: new Date(row[9]),
-        updated_at: row[10] ? new Date(row[10]) : undefined,
-      }));
+    return products
 }
 
-export async function findByBothCategory(gender_category_id: number, type_category_id: number): Promise<ProductPayload[]> {
-    const result = await db.query(
-        `SELECT 
-         p.id, p.seller_id, p.title, p.created_price, p.actual_price,
-         p.condition, p.gender_category_id, p.type_category_id,
-         p.description, p.created_at, p.updated_at,
-         u.username as seller_username
-       FROM products p
-       JOIN users u ON p.seller_id = u.id
-       WHERE p.type_category_id = ? AND p.gender_category_id = ? AND p.is_approved = TRUE AND p.is_available = TRUE
-       ORDER BY p.created_at DESC`,[type_category_id, gender_category_id]
-    );
-    return result.map((row: any) => ({
-        id: row[0],
-        seller_id: row[1],
-        title: row[2],
-        created_price: row[3],
-        actual_price: row[4],
-        condition: row[5],
-        gender_category_id: row[6],
-        type_category_id: row[7],
-        description: row[8],
-        created_at: new Date(row[9]),
-        updated_at: row[10] ? new Date(row[10]) : undefined,
-      }));
+export async function getProductsFiltred(gender_category_ids: number[] , type_category_ids: number[] ,
+  min_price: number, max_price: number, min_size:number, max_size:number): Promise<ProductPayload[]> {
+    let query = `
+    SELECT p.id, p.title, p.actual_price, pi.image_path
+    FROM products p
+    LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_primary = 1
+    LEFT JOIN product_variants pv ON pv.product_id = p.id
+    WHERE p.is_approved = 1 AND p.is_available = 1
+    AND p.actual_price BETWEEN ? AND ?
+    AND pv.size BETWEEN ? AND ?
+  `;
+  const params = [min_price, max_price, min_size, max_size];
+
+  if (gender_category_ids.length > 0) {
+    const placeholders = gender_category_ids.map(() => '?').join(',');
+    query += ` AND p.gender_category_id IN (${placeholders})`;
+    params.push(...gender_category_ids); // <== important
+  }
+
+  if (type_category_ids.length > 0) {
+    const placeholders = type_category_ids.map(() => '?').join(',');
+    query += ` AND p.type_category_id IN (${placeholders})`;
+    params.push(...type_category_ids);
+    }
+  query += ` GROUP BY p.id`;
+
+  const products = await db.queryEntries<{
+    id: number;
+    title: string;
+    actual_price: number;
+    image_path: string | null;
+  }>(query, params);
+
+  return products;
 }
+ 
 
 export async function getAllProductsAdmin():Promise<ProductPayload[]> {
     const result = await db.query(
@@ -181,24 +171,44 @@ export async function getAllProductsAdmin():Promise<ProductPayload[]> {
 }
 
 export async function getAllProductsUser():Promise<ProductPayload[]> {
-    const result = await db.query(
-        `SELECT * FROM products WHERE is_approved = TRUE AND is_available = TRUE ORDER BY created_at DESC`
-    );
-    return result.map((row: any) => ({
-        id: row[0],
-        seller_id: row[1],
-        title: row[2],
-        created_price: row[3],
-        actual_price: row[4],
-        condition: row[5],
-        gender_category_id: row[6],
-        type_category_id: row[7],
-        description: row[8],
-        created_at: new Date(row[9]),
-        updated_at: row[10] ? new Date(row[10]) : undefined,
-      }));
-}
+  const products = db.queryEntries<{
+    id: number;
+    title: string;
+    actual_price: number;
+    image_path: string | null;
+  }>(`
+    SELECT p.id, p.title, p.actual_price, pi.image_path
+    FROM products p
+    LEFT JOIN product_images pi
+      ON pi.product_id = p.id AND pi.is_primary = 1
+    WHERE p.is_approved = 1 AND p.is_available = 1
+    ORDER BY p.created_at DESC
+  `);
 
+  return products;
+}
+export async function getProductById(productId: number): Promise<ProductPayload[]> {
+    const products = db.queryEntries<{
+    id: number;
+    title: string;
+    actual_price: number;
+    image_path: string | null;
+    description: string | null;
+    variants:[{size: number, quantity: number}]
+  }>(`
+    SELECT p.id, p.title, p.actual_price, pi.image_path, p.description, pv.size,
+      pv.quantity
+    FROM products p
+    LEFT JOIN product_images pi
+      ON pi.product_id = p.id AND pi.is_primary = 1
+    LEFT JOIN product_variants pv
+      ON pv.product_id = p.id
+    WHERE p.is_approved = 1 AND p.is_available = 1 AND p.id = ?
+    ORDER BY p.created_at DESC
+  `,[productId]);
+    console.log("Products by ID:", products);
+  return products;
+}
 export async function getProductBytitle(title: string): Promise<ProductPayload | null> {
     const result = await db.query(
         `SELECT * FROM products WHERE title = ? AND is_approved = TRUE AND is_available = TRUE`,[title]

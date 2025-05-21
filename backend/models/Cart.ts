@@ -47,10 +47,10 @@ export async function addToCart(user_id: number, item: CartItemDB): Promise<void
 }
 
 export async function removeFromCart(user_id: number, product_id:number, size:number): Promise<void> {
-    const existingItem = await db.query(`
+    const existingItem = await db.queryEntries(`
         SELECT id FROM cart_items WHERE user_id= ? AND product_id = ? AND size = ?`, [user_id, product_id, size]);
     if (existingItem.length > 0) {
-        await db.query(`
+        await db.queryEntries(`
             DELETE FROM cart_items WHERE id = ? AND user_id = ? AND size = ?`, [existingItem[0].id, user_id, size]
         );
     }

@@ -1,55 +1,45 @@
 import db from "../database/client.db.ts";
-import { Wishlist, WishlistItem } from "../types/wishlist.ts";
+import { WishlistItem, WishlistItemDB } from "../types/wishlist.ts";
 
-export async function getWishlist(user_id: number): Promise<Wishlist> {
-    // Create if doesn't exist
-    const [wishlist] = await db.query(`
-        INSERT OR IGNORE INTO wishlist (user_id) VALUES (?)
-        RETURNING id`, [user_id]
-    );
-    const wishlist_id = wishlist ? wishlist[0] : (await db.query(`
-        SELECT id FROM wishlist WHERE user_id = ?`, [user_id]))[0][0];
-    const items = await db.query(`
-        SELECT wi.id, wi.product_id, p.title, p.created_price, p.actual_price, p.condition
+export async function getWishlistByUserId(user_id: number): Promise<WishlistItem[] | null> {
+    const result = await db.query(`
+        SELECT wi.id, wi.product_id, wi.user_id, 
+        p.title, p.actual_price, pi.image_path
         FROM wishlist_items wi
         JOIN products p ON wi.product_id = p.id
-        WHERE wi.wishlist_id = ?`, [wishlist_id]
-    );
-    const wishlistItems = items.map((item: any) => ({
-        id: item[0],
+        LEFT JOIN product_images pi ON pi.product_id = p.id AND pi.is_primary = TRUE
+        WHERE wi.user_id = ?
+        `, [user_id]);
+    if (!result || result.length === 0 || result[0].length === 0) {
+        return null;
+    }
+    const wishlist: WishlistItem[]= result.map(([id, product_id, user_id,title, price, image_path]) => ({
+        id,
+        product_id,
+        user_id,
         product: {
-            id: item[1],
-            title: item[2],
-            created_price: item[3],
-            actual_price: item[4],
-            condition: item[5]
-        },
+            id: product_id,
+            title,
+            actual_price: price,
+            image_path
+        }
     }));
-    return {
-        id: wishlist_id,
-        user_id: user_id,
-        items: wishlistItems
-    };
+    return wishlist;
+    
+}
+export async function addToWishlist(user_id: number, item: WishlistItemDB): Promise<void> {
+        await db.query(`
+            INSERT INTO wishlist_items (user_id, product_id) VALUES (?, ?)`, [user_id, item.product_id]
+        );
+    
 }
 
-export async function addToWishlist(user_id: number, item: WishlistItem): Promise<Wishlist> {
-    const wishlist = await getWishlist(user_id);
-    const existingItem = wishlist.items.find((i) => i.product.id === item.product_id);
-    if (!existingItem) {
-        await db.query(`
-            INSERT INTO wishlist_items (wishlist_id, product_id) VALUES (?, ?)`, [wishlist.id, item.product_id]
+export async function removeFromWishlist(user_id: number, product_id:number): Promise<void> {
+    const existingItem = await db.queryEntries(`
+        SELECT id FROM wishlist_items WHERE user_id= ? AND product_id = ?`, [user_id, product_id]);
+    if (existingItem.length > 0) {
+        await db.queryEntries(`
+            DELETE FROM wishlist_items WHERE id = ? AND user_id = ?`, [existingItem[0].id, user_id]
         );
     }
-    return getWishlist(user_id);
-}
-
-export async function removeFromWishlist(user_id: number, item: WishlistItem): Promise<Wishlist> {
-    const wishlist = await getWishlist(user_id);
-    const existingItem = wishlist.items.find((i) => i.product.id === item.product_id);
-    if (existingItem) {
-        await db.query(`
-            DELETE FROM wishlist_items WHERE id = ?`, [existingItem.product.id]
-        );
-    }
-    return getWishlist(user_id);
 }

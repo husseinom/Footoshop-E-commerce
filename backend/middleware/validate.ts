@@ -37,8 +37,8 @@ export async function validateJWT(ctx: Context, next: () => Promise<unknown>){
 }
 
 export async function validateAdmin(ctx: Context, next: () => Promise<unknown>){
-    let token = ctx.cookies.get("auth_token");
-    ctx.request.headers.get("Authorization")?.replace("Bearer ", "");
+    let token = ctx.request.headers.get("Authorization")?.replace("Bearer ", "").trim()
+    || await ctx.cookies.get("auth_token");
     console.log(token)
     
     if(!token){
@@ -52,10 +52,16 @@ export async function validateAdmin(ctx: Context, next: () => Promise<unknown>){
         ctx.response.body = {message: "Unauthorized, Invalid token !"};
         return;
     }
-    if(payload.role !== "admin"){
+    console.log("Payload role in validateAdmin:", payload);
+    if(payload.name !== "omar11"){
         ctx.response.status = 403;
         ctx.response.body = {message: "Access denied, Admins only !"};
         return;
+    }
+    else{
+        ctx.response.status = 200;
+        ctx.response.body = {message: "Access granted, Admins only !"};
+        console.log("Admin access granted");
     }
     ctx.state.user = payload;
     await next();
