@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/scrollreveal"></script>
-    <title>Cart</title>
+    <title>Footoshop</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -25,10 +25,14 @@
             <a href="main.html" class="nav_logo">FOOTOSHOP</a>
             <ul class="nav_list">
                 <li class="nav_item"><a href="main.html" class="nav_link">Home</a></li>
-                <li class="nav_item"><a href="allproducts.html?CategoryId=1" class="nav_link">Men</a></li>
-                <li class="nav_item"><a href="allproducts.html?CategoryId=2" class="nav_link">Women</a></li>
-                <li class="nav_item"><a href="allproducts.html?CategoryId=3" class="nav_link">Kids</a></li>
+                <li class="nav_item"><a href="#" class="nav_link">Men</a></li>
+                <li class="nav_item"><a href="#" class="nav_link">Women</a></li>
+                <li class="nav_item"><a href="#" class="nav_link">Kids</a></li>
                 <li class="nav_item"><a href="#" class="header_filter_limited">Limited Offers</a></li>
+                <form action="#" class="nav_form_product_page">
+                    <input type="text" class="nav_input_product_page" placeholder="What are you looking for?">
+                    <i class="fas fa-search"></i>
+                </form>
                 <!-- <li class="nav_item dropdown">
                     <a href="#" class="nav_link">Categories <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
@@ -72,28 +76,43 @@
             </div>
         </div>
     </nav>
-    <section class="section">
-        <div class="container">
-            <div class="cart-page">
-                <div class="cart-page_header">
-                    <p class="cart_header_title">Product title</p>
-                    <p class="cart_header_title">Product image</p>
-                    <p class="cart_header_title">Price</p>
-                    <p class="cart_header_title">Size</p>
-                    <p class="cart_header_title">Quantity</p>
-                    <p class="cart_header_title">SubTotal</p>
-                </div>
-    
-                <!-- Dynamic items go here -->
-                <div class="cart-items-container"></div>
-    
-                <div class="cart_total">
-                    <p class="cart_total_p">Total: 0.00$</p>
-                </div>
+    <div class="container_product_page">
+        <div class="product">
+            <div class="gallery">
+                <img id="productImage" src="" alt="">
+            </div>
+            <div class="details">
+                <!-- Product Details -->
+                <h1 id="productTitle"></h1>
+                <h2 id="productPrice"></h2>
+                <p id="productDescription"></p>
+                <form action="">
+                    <div class="size-select">
+                        <label for="size_product">Select Size</label>
+                        <select id="size_product" name="size" required>
+                            <!-- Fill the options with backend data -->
+                        </select>
+                    </div>
+                    <div class="quantity-select">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1">
+                    </div>
+                    <div class="product-btn-group">
+                        <div class="button add-cart">
+                            <i class="fas fa-shopping-cart"></i> Add To Cart
+                        </div>
+                        <div class="button add-wishlist">
+                            <i class="fas fa-heart"></i> Add To Wishlist
+                        </div>
+                    </div>
+                    
+                </form>
+
+                <!-- Product Details -->
             </div>
         </div>
-    </section>
-    <footer class="footer_cart">
+    </div>
+    <footer class="footer">
         <div class="container footer_container">
             <div class="footer_item">
                 <a href="#" class="footer_logo">Footoshop</a>
@@ -139,10 +158,9 @@
             
         </div>
     </footer>
-    <script src="../js/cart.js"></script>
-    <script src="../js/main.js"></script>
     <script src="../js/wishlist.js"></script>
+    <script src="../js/singleproduct.js"></script>
+    <script src="../js/cart.js"></script>
     
-
 </body>
 </html>

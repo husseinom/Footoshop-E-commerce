@@ -1,121 +1,176 @@
-let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+let wishlist = [];
 
-function showWishlistToast(message) {
-    let toast = document.querySelector('.wishlist-toast');
+function getUserId() {
+    return localStorage.getItem('auth_token');
+}
+// Add this new function to fetch wishlist data
+async function fetchWishlistFromServer() {
+
+    const token = getUserId(); // Get user ID from local storage
+    try {
+        const response = await fetch(`http://localhost:4000/wishlist`, {
+            method: 'GET',
+            mode:'cors',
+            headers:{
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',},
+            credentials:'include',
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch wishlist');
+        }
+        const data = await response.json();
+        
+        // Merge server wishlist with local wishlist
+        if (data.wishlist) {
+            // Update local storage with server data
+            wishlist = data.wishlist;
+            // Update display
+            updateWishlistCount();
+            displayWishlistItems();
+        }
+    } catch (error) {
+        console.error('Error fetching wishlist:', error);
+    }
+}
+
+function showToast(message) {
+    // Create toast element if it doesn't exist
+    let toast = document.querySelector('.toast');
     if (!toast) {
         toast = document.createElement('div');
-        toast.className = 'toast wishlist-toast';
+        toast.className = 'toast';
         document.body.appendChild(toast);
     }
     
+    // Set message and show toast
     toast.textContent = message;
     toast.classList.add('show');
     
+    // Hide toast after 3 seconds
     setTimeout(() => {
         toast.classList.remove('show');
     }, 3000);
 }
 
-function addToWishlist(product) {
-    // Check if product already exists in wishlist
-    const existingItem = wishlist.find(item => 
-        item.name === product.name && 
-        item.price === product.price
-    );
-
-    if (existingItem) {
-        showWishlistToast('Product is already in your wishlist!');
-        return;
+async function addToWishlist(product) {
+    const token = getUserId();
+    const productExists = wishlist.some(item => item.product_id === product.product_id);
+    if (productExists) {
+        showToast('Already Exist'); // Show toast if the product is already in the wishlist
+        return; // Exit the function early
     }
-
-    wishlist.push(product);
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    updateWishlistCount();
-    showWishlistToast('Product added to wishlist!');
+    try {
+      const response = await fetch(`http://localhost:4000/wishlist`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: product.product_id,
+        }),
+        credentials: 'include',
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText);
+      }
+  
+      const data = await response.json();
+      console.log(data);
+      wishlist = data.wishlist;
+      fetchWishlistFromServer();
+      console.log(wishlist);
+      updateWishlistCount();
+      showToast('Product added to wishlist!');
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+      showToast('Failed to add product to wishlist');
+    }
 }
 
-function removeFromWishlist(index) {
-    wishlist.splice(index, 1);
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    displayWishlistItems();
+async function removeFromWishlist(productId) {
+    const token = getUserId();
+    try {
+        const response = await fetch(`http://localhost:4000/wishlist`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ productId}),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to remove item from wishlist');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        wishlist = data.wishlist; // Update local wishlist with server response
+        updateWishlistCount();
+        displayWishlistItems();
+        showToast('Item removed from wishlist!');
+    } catch (error) {
+        console.error('Error removing from wishlist:', error);
+        // showToast('Failed to remove item from wishlist');
+    }
 }
 
 function updateWishlistCount() {
-    const cartCount = document.querySelector('.cart-count');
-    if (cartCount) {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cartCount.textContent = cart.length;
-    }
     const wishlistCount = document.querySelector('.wishlist-count');
     if (wishlistCount) {
-        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         wishlistCount.textContent = wishlist.length;
     }
 }
 
-
 function displayWishlistItems() {
-    const wishlistContainer = document.querySelector('.wishlist');
-    const wishlistHeader = document.querySelector('.wishlist_header');
+    const wishlistContainer = document.querySelector('.wishlist-items-container');  // Ensure this is the correct element in your wishlist.html
     
-    // Only try to display items if we're on the wishlist page
-    if (!wishlistContainer || !wishlistHeader) return;
+    if (!wishlistContainer) return;
+    wishlistContainer.innerHTML = ''; // Clear previous wishlist items
 
-    // Clear existing items
-    const existingItems = document.querySelectorAll('.wishlist_item');
-    existingItems.forEach(item => item.remove());
-
+    
     if (wishlist.length === 0) {
-        wishlistHeader.insertAdjacentHTML('afterend', `
-            <div class="wishlist_item">
-                <p class="wishlist_empty" style="text-align: center; width: 100%;">Your wishlist is empty</p>
-            </div>
-        `);
-        return;
-    }
-
-    const wishlistItems = wishlist.map((item, index) => {
-        const price = parseFloat(item.price.replace('$', ''));
+        wishlistContainer.innerHTML = '<p>Your wishlist is empty!</p>';
         
-        return `
-            <div class="wishlist_item">
-                <span class="wishlist_item_title">${item.name}</span>
-                <img src="${item.image}" alt="${item.name}" class="wishlist_img">
-                <button class="remove-item" onclick="removeFromWishlist(${index})">
-                    <i class="fas fa-trash"></i>
-                </button>
-                <div class="wishlist_item_price">$${price.toFixed(2)}</div>
-                
-                
-            </div>
-        `;
-    }).join('');
+    } else {
+        wishlist.forEach(item => {
+            
 
-    wishlistHeader.insertAdjacentHTML('afterend', wishlistItems);
+            const wishlistItemHTML = `
+                <div class="wishlist_item">
+                    <span class="wishlist_item_title">${item.product.title}</span>
+                    <img src="../../backend/${item.product.image_path}" alt="${item.product.title}" class="wishlist_img">
+                    <i class="fa-solid fa-trash remove_btn" data-id="${item.product.id}" data-size="${item.size}" style="cursor: pointer;"></i>
+                    <div class="wishlist_item_price">${item.product.actual_price}$</div>
+                    
+                    
+                </div>`;
 
+            wishlistContainer.insertAdjacentHTML('beforeend', wishlistItemHTML);
+        });
+        // Add event listeners to remove buttons
+        document.querySelectorAll('.remove_btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const productId = btn.getAttribute('data-id');
+                removeFromWishlist(productId);
+            });
+        });
+        
+    }
 }
 
+// Call the function when the page is loaded
+window.addEventListener('DOMContentLoaded', fetchWishlistFromServer);
+
+
+// Initialize wishlist display
 document.addEventListener('DOMContentLoaded', () => {
-    displayWishlistItems();
-    // Update wishlist count on page load
-    updateWishlistCount();
-
-    // Add click handlers to heart icons
-    document.querySelectorAll('.card .fa-heart').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const card = button.closest('.card');
-            if (!card) return;
-            
-            const product = {
-                name: card.querySelector('.card_title').textContent,
-                price: card.querySelector('.card_price').textContent,
-                image: card.querySelector('.card_img').getAttribute('src')
-            };
-            
-            addToWishlist(product);
-        });
-    });
+    if (window.location.pathname.includes('wishlist.html')) {
+        fetchWishlistFromServer();
+    }
 });
-
-

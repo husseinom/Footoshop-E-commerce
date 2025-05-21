@@ -1,5 +1,41 @@
+async function verifyRole(){
+  const token = localStorage.getItem("auth_token");
+  if (!token) {
+    console.error("No token found");
+    return;
+  }
+  try{
+    const response = await fetch("http://localhost:4000/admin", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: "include",
+    });
+    const data = await response.json();
+    console.log(data);
+    if (response.status===401) {
+      window.location.href = "login.html";
+    }
+    if (response.status ===403) {
+      window.location.href = "main.html";
+    }
+    if (response.status === 200){
+      console.log("User is admin");
+    }
+
+  } catch (err) {
+    console.error("Error verifying token:", err);
+  }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     try {
+      verifyRole();
       // DOM Elements with null checks
       const menuToggle = document.getElementById("menuToggle");
       const sidebar = document.getElementById("sidebar");
@@ -141,6 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const token = localStorage.getItem("auth_token");
   console.log("Token:", token);
+  
   
   // Wait for DOM to load
   document.addEventListener("DOMContentLoaded", () => {

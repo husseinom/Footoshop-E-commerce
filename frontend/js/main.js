@@ -61,29 +61,7 @@ async function loadLatestProducts() {
     for (const product of products) {
       const slide = document.createElement("div");
       slide.classList.add("swiper-slide");
-      slide.innerHTML = `
-        <div class="card">
-          <div class="card_top">
-            <img src="../../backend/${product.image_path}" alt="${product.title}" class="card_img">
-            <div class="card_tag">New</div>
-            <div class="card_top_icons">
-              <a href="#" 
-                 class="card_icon add-to-cart" 
-                 data-product-id="${product.id}"
-                 data-title="${product.title}"
-                 data-price="${product.actual_price}"
-                 data-image="${product.image_path}">
-                 <i class="fas fa-shopping-cart"></i>
-              </a>
-              <a href="#" class="card_icon"><i class="fas fa-heart"></i></a>
-            </div>
-          </div>
-          <div class="card_body">
-            <h3 class="card_title">${product.title}</h3>
-            <p class="card_price">${product.actual_price}$</p>
-          </div>
-        </div>
-      `;
+      slide.innerHTML = createProductCard(product); // Use the reusable function
       wrapper.appendChild(slide);
     }
 
@@ -102,23 +80,24 @@ async function loadLatestProducts() {
       },
     });
 
-    document.querySelectorAll('.add-to-cart').forEach(button => {
+    document.querySelectorAll('.wishlist-link').forEach(button => {
       button.addEventListener('click', (e) => {
+        console.log("Click event triggered");
         e.preventDefault();
+        console.log("preventDefault() called");
+        e.stopPropagation();
         
         const product = {
           product_id: parseInt(button.dataset.productId),
           title: button.dataset.title,
           price: parseFloat(button.dataset.price),
           image: button.dataset.image,
-          quantity: 1,
-          size: 42
         };
     
-        if (typeof addToCart === 'function') {
-          addToCart(product);
+        if (typeof addToWishlist === 'function') {
+          addToWishlist(product);
         } else {
-          console.error('Cart functionality not loaded');
+          console.error('Wishlist functionality not loaded');
         }
       });
     });

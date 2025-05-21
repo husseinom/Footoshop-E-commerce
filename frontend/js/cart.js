@@ -88,16 +88,17 @@ async function addToCart(product) {
     }
 }
 
-async function removeFromCart(productId) {
+async function removeFromCart(productId, size) {
     const token = getUserId();
     try {
-        const response = await fetch(`http://localhost:4000/cart/${productId}`, {
+        const response = await fetch(`http://localhost:4000/cart`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
+            body: JSON.stringify({ productId, size }),
         });
 
         if (!response.ok) {
@@ -105,13 +106,15 @@ async function removeFromCart(productId) {
         }
 
         const data = await response.json();
+        console.log(data);
         cart = data.cart; // Update local cart with server response
+        showToast('Item removed from cart!');
         updateCartCount();
         displayCartItems();
-        showToast('Item removed from cart!');
+        
     } catch (error) {
         console.error('Error removing from cart:', error);
-        showToast('Failed to remove item from cart');
+        // showToast('Failed to remove item from cart');
     }
 }
 
@@ -142,15 +145,39 @@ function displayCartItems() {
                     <span class="cart_item_title">${item.product.title}</span>
                     <img src="../../backend/${item.product.image_path}" alt="${item.product.title}" class="cart_img">
                     <div class="cart_item_price">${item.product.actual_price}$</div>
+                    <div class="cart_item_size">${item.size}</div>
                     <input type="number" value="${item.quantity}" class="cart_item_quantity" min="1">
-                    <p class="cart_item_total">${subtotal}$</p>
+                    <i class="fa-solid fa-trash remove_btn" data-id="${item.product.id}" data-size="${item.size}" style="cursor: pointer;"></i>
+                    <p class="cart_item_total">${subtotal.toFixed(2)}$</p>
+                    
                 </div>`;
 
             cartContainer.insertAdjacentHTML('beforeend', cartItemHTML);
         });
+        document.querySelectorAll('.cart_item_quantity').forEach((input, index) => {
+            input.addEventListener('change', (e) => {
+                const newQuantity = parseInt(e.target.value);
+                if (newQuantity >= 1) {
+                    cart[index].quantity = newQuantity;
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    displayCartItems(); // Re-render with updated values
+                }
+            });
+        });
+        // Add event listeners to remove buttons
+        document.querySelectorAll('.remove_btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const productId = btn.getAttribute('data-id');
+                const size = btn.getAttribute('data-size');
+                console.log(size);
+                removeFromCart(productId,size);
+            });
+        });
 
         // Update the total price
         cartTotalElement.textContent = `Total: $${totalAmount.toFixed(2)}`;
+
+        
     }
 }
 
