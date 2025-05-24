@@ -25,23 +25,21 @@ async function onSubmit() {
         if (!response.ok) {
             throw new Error("Wrong username or password");
         }
+        
 
-        const data = await response.json();
-        console.log(data);
-
-        if (data.token) {
-            localStorage.setItem("auth_token", data.token); // Store token
-            alert("Logged in successfully");
-
-            if (data.user.role === "admin") {
-                window.location.href = "admin.html"; // Redirect to admin page
-            } else {
-                window.location.href = "main.html";
-            }
+        
+        const testRole = await fetch("http://localhost:4000/admin", {
+            method: 'GET',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        }); 
+        if (!testRole.ok) {
+            window.location.href = "main.html"; // Redirect to main page
         } else {
-            alert("Login failed");
+            window.location.href = "admin.html"; // Redirect to main page
         }
-
+    
     } catch (err) {
         alert("Erreur: " + err.message);
     }
@@ -88,7 +86,7 @@ function register(){
                 }
             }).then(data =>{
                 console.log(data);
-                alert("Registered");
+                alert("Registered");i
 
             }).catch((err) => {
                 alert("Erreur: " + err.message);

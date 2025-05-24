@@ -1,22 +1,25 @@
 let wishlist = [];
 
-function getUserId() {
-    return localStorage.getItem('auth_token');
-}
+
 // Add this new function to fetch wishlist data
 async function fetchWishlistFromServer() {
 
-    const token = getUserId(); // Get user ID from local storage
+    
     try {
         const response = await fetch(`http://localhost:4000/wishlist`, {
             method: 'GET',
             mode:'cors',
             headers:{
-                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',},
             credentials:'include',
         });
         if (!response.ok) {
+            if (response.status === 401) {
+                showToast('Please log in to view your wishlist');
+                // Optional: Redirect to login page
+                window.location.href = "login.html";
+                return;
+            }
             throw new Error('Failed to fetch wishlist');
         }
         const data = await response.json();
@@ -54,7 +57,6 @@ function showToast(message) {
 }
 
 async function addToWishlist(product) {
-    const token = getUserId();
     const productExists = wishlist.some(item => item.product_id === product.product_id);
     if (productExists) {
         showToast('Already Exist'); // Show toast if the product is already in the wishlist
@@ -64,7 +66,6 @@ async function addToWishlist(product) {
       const response = await fetch(`http://localhost:4000/wishlist`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -92,12 +93,10 @@ async function addToWishlist(product) {
 }
 
 async function removeFromWishlist(productId) {
-    const token = getUserId();
     try {
         const response = await fetch(`http://localhost:4000/wishlist`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
@@ -172,5 +171,8 @@ window.addEventListener('DOMContentLoaded', fetchWishlistFromServer);
 document.addEventListener('DOMContentLoaded', () => {
     if (window.location.pathname.includes('wishlist.html')) {
         fetchWishlistFromServer();
+    }
+    if (typeof initWebSocket === 'function') {
+        initWebSocket();
     }
 });

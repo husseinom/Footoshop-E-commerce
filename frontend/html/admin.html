@@ -72,7 +72,7 @@
               </a>
               <ul class="submenu">
                 <li><a href="productsAdmin.html">All Products</a></li>
-                <li><a href="#">Categories</a></li>
+                <!-- <li><a href="#">Categories</a></li> -->
               </ul>
             </li>
             <li class="menu-item has-submenu">
@@ -82,9 +82,8 @@
                 <i class="fa-solid fa-angle-down dropdown-icon"></i>
               </a>
               <ul class="submenu">
-                <li><a href="#">All Users</a></li>
-                <li><a href="#">Roles</a></li>
-                <li><a href="#">Permissions</a></li>
+                <li><a href="usersAdmin.html">All Users</a></li>
+                
               </ul>
             </li>
             <!-- <li class="menu-item">
@@ -114,9 +113,9 @@
               </ul>
             </li> -->
             <li class="menu-item">
-              <a href="#">
-                <i class="fa-solid fa-circle-question"></i>
-                <span>Help</span>
+              <a href="main.html">
+                <i class="fa-solid fa-shoe-prints"></i>
+                <span>Footoshop</span>
               </a>
             </li>
           </ul>
@@ -188,7 +187,7 @@
               <button type="submit">Add Product</button>
           </form>
           </div>
-          <div class="card">
+          <!-- <div class="card">
             <h3>Add New User</h3>
             <form id="UserForm", class="addForm">
               <input type="text"  id="username" placeholder="Username" required/>
@@ -207,7 +206,7 @@
               </select>
               <button type="submit">Add User</button>
             </form>
-          </div>
+          </div> -->
           <div class="card">
             <h3>Add New Category</h3>
             <form id="CategoryForm"class="addForm">
@@ -227,6 +226,8 @@
       </main>
     </div>
 
+    <script src="../js/websockets-manager.js"></script>
     <script src="../js/admin.js"></script>
+    
   </body>
 </html>

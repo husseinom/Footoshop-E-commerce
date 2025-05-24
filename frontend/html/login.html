@@ -20,7 +20,7 @@
                 <input type="text" id="last_name" placeholder="Last Name" required/>
                 <input type="text" id="address" placeholder="Address(optionnal)" />
                 <input type="tel" id="mobile_number" placeholder="Phone Number(optionnal)" />
-                <button type="submit" onclick="register()">Sign Up</button>
+                <button type="button" onclick="register()">Sign Up</button>
             </form>
         </div>
         <div class="form-container sign-in-container">
@@ -29,7 +29,7 @@
                 <span>Use your account</span>
                 <input type="text"  id="sign-in-username" placeholder="Username" required/>
                 <input type="password" id="sign-in-password" placeholder="Password" required/>
-                <button type="submit" onclick="onSubmit()">Sign In</button>
+                <button type="button" onclick="onSubmit()">Sign In</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -47,6 +47,7 @@
             </div>
         </div>
     </div>
+    <script src="../js/websockets-manager.js"></script>
     <script src="../js/login.js"></script>
 </body>
 </html>

@@ -983,3 +983,34 @@ ul{
     margin-top: 5px;
     font-size: 14px;
 }
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 2px; /* Reduced from 5px to bring buttons closer to input */
+}
+
+/* Make the quantity input more compact */
+.cart_item_quantity {
+  width: 36px; /* Slightly smaller width */
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 3px 0; /* Reduced vertical padding */
+  margin: 0 2px; /* Small margin on sides */
+}
+
+/* Optional: Make the buttons slightly smaller too */
+.quantity-btn {
+  width: 22px; /* Slightly smaller width */
+  height: 22px; /* Slightly smaller height */
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px; /* Slightly smaller font */
+  padding: 0;
+}

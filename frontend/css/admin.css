@@ -669,6 +669,231 @@ body {
   }
 
 
+/* User Management Styles - Replace your existing user card styles */
+.user-item {
+  position: relative;
+  background-color: var(--light-color);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.user-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.user-info h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.user-email {
+  color: var(--gray-color);
+  font-size: 14px;
+  margin: 0;
+}
+
+.user-id {
+  font-size: 12px;
+  color: var(--gray-color);
+  opacity: 0.7;
+  margin: 0;
+}
+
+.user-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 8px;
+  text-align: center;
+  width: max-content;
+}
+
+.user-status.online {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.user-status.offline {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.user-role {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  width: max-content;
+}
+
+.admin-role {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.user-role:not(.admin-role) {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border: 1px solid #bee5eb;
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.remove-user-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.remove-user-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Connected users styling */
+#connected-users-list .user-item {
+  border-left: 4px solid #4caf50;
+  padding: 12px 16px;
+}
+
+#connected-users-list .username {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--dark-color);
+}
+
+#connected-users-list .role {
+  margin-left: auto;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+#connected-users-list .admin-role {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+#connected-users-list .user-role {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+/* Layout adjustments */
+.card {
+  margin-bottom: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  padding: 0 0 15px 0;
+  border-bottom: 1px solid var(--light-gray);
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+/* Animation for new connected users */
+@keyframes highlight {
+  0% {
+    background-color: rgba(76, 175, 80, 0.2);
+  }
+  100% {
+    background-color: var(--light-color);
+  }
+}
+
+.new-connection {
+  animation: highlight 2s ease-out;
+}
+
+/* Empty state styling */
+#connected-users-list p:only-child,
+#users-list p:only-child {
+  padding: 25px;
+  text-align: center;
+  color: var(--gray-color);
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 8px;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .profile-dropdown {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .profile-dropdown a:hover {
+    background-color: var(--gray-color);
+}
+
+[data-theme="dark"] .user-item {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .user-status.online {
+  background-color: #155724;
+  color: #d4edda;
+}
+
+[data-theme="dark"] .user-status.offline {
+  background-color: #721c24;
+  color: #f8d7da;
+}
+
+[data-theme="dark"] .admin-role {
+  background-color: #523e02;
+  color: #ffe484;
+  border-color: #523e02;
+}
+
+[data-theme="dark"] .user-role:not(.admin-role) {
+  background-color: #0c5460;
+  color: #d1ecf1;
+  border-color: #0c5460;
+}
+
+[data-theme="dark"] #connected-users-list p:only-child,
+[data-theme="dark"] #users-list p:only-child {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 992px) {
     .sidebar {

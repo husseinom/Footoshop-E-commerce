@@ -109,3 +109,59 @@ async function loadLatestProducts() {
 }
 
 window.addEventListener("DOMContentLoaded", loadLatestProducts);
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize user WebSocket connection - this should be defined in websockets-manager.js
+  if (typeof initWebSocket === 'function') {
+    initWebSocket();
+  } else {
+    console.warn('WebSocket initialization function not found');
+  }
+  
+  // Rest of your DOMContentLoaded code...
+  const profileLink = document.getElementById('profile-link');
+  if (profileLink) {
+    profileLink.addEventListener('click', handleProfileClick);
+  }
+});
+
+// Simple function to handle profile click
+async function handleProfileClick(event) {
+  try {
+    const response = await fetch("http://localhost:4000/admin", {
+      method: "GET",
+      mode: "cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include"
+    });
+    
+    const data = await response.json();
+    
+    // If unauthorized (no token/expired), go to login
+    if (response.status === 401) {
+      window.location.href = "login.html";
+      return;
+    }
+    
+    // If forbidden (not admin), stay on main page
+    if (response.status === 403) {
+      // User is logged in but not admin, could redirect to a user dashboard
+      window.location.href = "main.html";
+      return;
+    }
+    
+    // If status is 200, user is admin
+    if (response.status === 200) {
+      window.location.href = "admin.html";
+      return;
+    }
+  } catch (err) {
+    console.error("Error checking role:", err);
+    // If any error, go to login
+    window.location.href = "login.html";
+  }
+}
+
+// Add click event listener to profile element

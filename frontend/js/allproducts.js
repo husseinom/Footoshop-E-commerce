@@ -170,6 +170,9 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchAndPopulateCategories();
     loadAllProducts();
     setupSliders();
+    if (typeof initWebSocket === 'function') {
+        initWebSocket();
+    }
 });
 
 
