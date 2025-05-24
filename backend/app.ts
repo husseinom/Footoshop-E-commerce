@@ -3,6 +3,8 @@ import { Application} from "https://deno.land/x/oak@v17.1.4/mod.ts";
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import authRoute from "./routes/authRoute.ts";
 import { validateJWT } from "./middleware/validate.ts";
+import { createWebSocketRouter } from "./services/Websockets.ts"; // Import the WebSocket router creator
+
 
 const app = new Application();
 
@@ -22,6 +24,7 @@ if (Deno.args.length >= 3) {
 
 console.log(`Oak back server running on port ${options.port}`);
 
+const wsRouter = createWebSocketRouter();
 
 app.use(oakCors({
   origin: "http://localhost:5501",
@@ -29,6 +32,10 @@ app.use(oakCors({
 }))
 app.use(authRoute.routes());
 app.use(authRoute.allowedMethods())
+
+app.use(wsRouter.routes());
+app.use(wsRouter.allowedMethods());
+
 Deno.addSignalListener("SIGINT", () => {
     console.log("Shutting down server...");
     Deno.exit(); // Exit the process

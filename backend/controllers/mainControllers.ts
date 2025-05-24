@@ -1,5 +1,5 @@
 import { Context } from "https://deno.land/x/oak@v17.1.4/mod.ts";
-import { addToCart, removeFromCart, UpdateCart, getCartByUserId } from "../models/Cart.ts";
+import { addToCart, removeFromCart, UpdateCart, getCartByUserId, getProductStockForSize } from "../models/Cart.ts";
 import { addToWishlist, removeFromWishlist, getWishlistByUserId} from "../models/Wishlist.ts";
 
 export async function getMyCart(ctx: Context) {
@@ -21,11 +21,26 @@ export async function addCartItem(ctx:Context){
         const body = await ctx.request.body.json();
         const {product_id, quantity, size}=body
         console.log("request body",body) 
+        
         if(!product_id || !quantity || !size){
             ctx.response.status = 400;
             ctx.response.body = {message: "Missing required fields"};
             return;
         }
+        
+        // Check stock availability before adding
+        const availableStock = await getProductStockForSize(product_id, size);
+        console.log(`Available stock for product ${product_id}, size ${size}: ${availableStock}`);
+        
+        if (quantity > availableStock) {
+            ctx.response.status = 400;
+            ctx.response.body = { 
+                message: "Not enough stock available", 
+                availableStock 
+            };
+            return;
+        }
+        
         const CartItem = {
             user_id: userId,
             product_id,
@@ -68,62 +83,7 @@ export async function removeCartItem(ctx: Context) {
     }
 
 }
-// à changer
-export async function updateCart(ctx: Context) {
-    try {
-        const userId = Number(ctx.state.user.id); // Assuming user ID is passed in the URL
-        const itemId = Number(ctx.params.item_id); // Assuming item ID is passed in the URL
-        const body = await ctx.request.body.json();
-        const { action, quantity } = body; // Assuming action and quantity are passed in the request body
-        if (!action || (action !== "remove" && !quantity)) {
-            ctx.response.status = 400;
-            ctx.response.body = { message: "Missing required fields" };
-            return;
-        }
-        const cart = await getCart(ctx.state.userId); // Assuming user ID is in state
-        if (action === "increment" || action === "decrement") {
-            const item = cart.items.find((i) => i.product.id === itemId);
-            if (item) {
-                const cartItem = {
-                    product_id: item.product.id,
-                    user_id: userId,
-                    quantity: quantity,
-                    size: item.size,
-                };
-                if (action === "increment" || action === "decrement") {
-                    await UpdateCart(userId, cartItem); // Update cart in database
-                    ctx.response.status = 200;
-                    ctx.response.body = { 
-                        message: `Quantity of item ${item.product.title} changed, Cart updated successfully`,
-                        cart: ctx.state.cart 
-        };
-                } else if (action === "remove") {
-                    await removeFromCart(userId, cartItem); // Remove item from cart in database
-                    ctx.response.status = 200;
-                    ctx.response.body = { 
-                        message: `${item.product.title} removed, Cart updated successfully`,
-                        cart: ctx.state.cart 
-                    };
-                }
-                else if (action === "add") {
-                    await addToCart(userId, cartItem); // Add item to cart in database
-                    ctx.response.status = 200;
-                    ctx.response.body = { 
-                        message: `${item.product.title} added, Cart updated successfully`,
-                        cart: ctx.state.cart 
-                    };
-                }
-            }
-        
-        }
-    } catch (error) {
-        ctx.response.status = 500;
-        ctx.response.body = { 
-            message: "Failed to update cart", 
-            error: error.message 
-        };
-    }
-}
+
 export async function getMyWishlist(ctx: Context) {
     try {
         const userId = Number(ctx.state.user.id); 
@@ -189,4 +149,65 @@ export async function removeWishlistItem(ctx: Context) {
 
     }
 
+}
+
+export async function updateCartItemController(ctx: Context) {
+  try {
+    const userId = Number(ctx.state.user.id);
+    const body = await ctx.request.body.json();
+    const { productId, size, quantity } = body;
+    
+    console.log("Updating cart item:", { productId, size, quantity, userId });
+    
+    if (!productId || !size || !quantity) {
+      ctx.response.status = 400;
+      ctx.response.body = { message: "Missing required fields" };
+      return;
+    }
+
+    // Validate quantity is a positive integer
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      ctx.response.status = 400;
+      ctx.response.body = { message: "Quantity must be a positive integer" };
+      return;
+    }
+
+    // Use the fixed function to check stock availability
+    const availableStock = await getProductStockForSize(productId, size);
+    console.log(`Available stock for product ${productId}, size ${size}: ${availableStock}`);
+    
+    if (availableStock === undefined || availableStock === null) {
+      ctx.response.status = 400;
+      ctx.response.body = { message: "Product size not available" };
+      return;
+    }
+    
+    if (quantity > availableStock) {
+      ctx.response.status = 400;
+      ctx.response.body = { 
+        message: "Not enough stock available", 
+        availableStock 
+      };
+      return;
+    }
+
+    // Use your existing UpdateCart function
+    const updatedCart = await UpdateCart(userId, {
+        product_id: productId,
+        user_id: userId,
+        quantity,
+        size
+    });
+
+    ctx.response.status = 200;
+    ctx.response.body = { 
+      message: "Cart updated successfully", 
+      cart: updatedCart 
+    };
+    
+  } catch (error) {
+    console.error("Error updating cart item:", error);
+    ctx.response.status = 500;
+    ctx.response.body = { message: "Failed to update cart", error: error.message };
+  }
 }

@@ -116,3 +116,54 @@ export async function getUserById(id: number): Promise<User | null> {
       return null;
     }
 }
+
+export async function getAllUsers(): Promise<User[]> {
+    try {
+        const result = await db.query(`
+            SELECT id, username, password, email, first_name, last_name, 
+                   address, mobile_number, role, created_at 
+            FROM users
+            ORDER BY created_at DESC
+        `);
+        
+        if (!result || result.length === 0) {
+            return [];
+        }
+        
+        // Map the results to User objects
+        return result.map(row => ({
+            id: row[0],
+            username: row[1],
+            password: row[2],
+            email: row[3],
+            first_name: row[4],
+            last_name: row[5],
+            address: row[6],
+            mobile_number: row[7],
+            role: row[8],
+            created_at: new Date(row[9])
+        }));
+    } catch (error) {
+        console.error("Error in getAllUsers:", error);
+        return [];
+    }
+}
+
+// Add this function to delete a user by ID
+export async function deleteUserById(id: number): Promise<boolean> {
+    try {
+        // First check if the user exists
+        const user = await getUserById(id);
+        if (!user) {
+            return false;
+        }
+        
+        // Delete the user
+        await db.query("DELETE FROM users WHERE id = ?", [id]);
+        console.log(`User with ID ${id} deleted successfully.`);
+        return true;
+    } catch (error: unknown) {
+        console.error(`Error deleting user with ID ${id}:`, error);
+        return false;
+    }
+}

@@ -6,7 +6,9 @@ const secret = new TextEncoder().encode("b9a1f5e0-3d92-4ebc-abc1-07f2c5e3a3d9");
 export async function verifyJWT(token: string): Promise<JWTPayload | null> {
   try {
     console.log("Token received in verifyJWT:", token);
-    const { payload } = await jwtVerify(token, secret);
+    const { payload } = await jwtVerify(token, secret,{
+        clockTolerance: 31536000
+    });
     console.log("JWT verified successfully:", payload);
     return payload;
   } catch (error) {

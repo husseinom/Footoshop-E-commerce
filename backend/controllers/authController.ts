@@ -1,7 +1,9 @@
 import { Context } from "https://deno.land/x/oak@v17.1.4/mod.ts";
-import { createUser, getUserByUsername } from "../models/User.ts";
+import { createUser, getUserByUsername, getAllUsers, deleteUserById } from "../models/User.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.0/mod.ts";
 import { createJWT } from "../services/authServices.ts";
+// Import your WebSocket service to access connected users
+import { connectedUsers } from "../services/Websockets.ts";
 
 export async function registerUser(ctx: Context) {
     try {
@@ -61,23 +63,74 @@ export async function loginUser(ctx: Context) {
         }
 
         const token = await createJWT(user);
+        ctx.cookies.set("auth_token", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24, // 1 day
+        });
         
         ctx.response.status = 200;
-        ctx.response.body = {
-            message: "Login successful",
-            token,
-            user: {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                role: user.role
-            }
-        };
+        
         console.log(`[LOGIN] User logged in: ${username}`);
     } catch (error) {
         console.error("Login error:", error);
         ctx.response.status = 500;
         ctx.response.body = { message: "Internal server error" };
+    }
+}
+
+// Update your function to get connected users from WebSocket service
+export async function getAllConnectedUsers(ctx: Context) {
+    try {
+        // Transform the Map into an array of user objects
+        const users = Array.from(connectedUsers.values()).map(user => ({
+            userId: user.userId,
+            username: user.username,
+            isAdmin: user.isAdmin,
+            connectionTime: user.connectionTime || new Date()
+        }));
+        
+        ctx.response.status = 200;
+        ctx.response.body = users;
+    } catch (error) {
+        console.error("Error fetching connected users:", error);
+        ctx.response.status = 500;
+        ctx.response.body = { message: "Failed to retrieve connected users", error: error.message };
+    }
+}
+
+// Add a function to get all registered users
+export async function getAllRegisteredUsers(ctx: Context) {
+    try {
+        // Make sure the user is admin
+        const user = ctx.state.user;
+        if (!user || user.role !== 'admin') {
+            ctx.response.status = 403;
+            ctx.response.body = { message: "Admin access required" };
+            return;
+        }
+        
+        // Get all users from database
+        const users = await getAllUsers();
+        
+        // Don't send password hashes to frontend
+        const safeUsers = users.map(user => ({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            role: user.role,
+            created_at: user.created_at
+        }));
+        
+        ctx.response.status = 200;
+        ctx.response.body = safeUsers;
+    } catch (error) {
+        console.error("Error fetching all users:", error);
+        ctx.response.status = 500;
+        ctx.response.body = { message: "Failed to retrieve users", error: error.message };
     }
 }
 
@@ -116,3 +169,48 @@ export async function loginUser(ctx: Context) {
 //         ctx.response.body = { error: "Debug failed", details: error.message };
 //     };
 // }
+
+// Add this new controller function
+export async function removeUser(ctx: Context) {
+    try {
+        // Check if user is admin
+        const admin = ctx.state.user;
+        if (!admin || admin.role !== 'admin') {
+            ctx.response.status = 403;
+            ctx.response.body = { message: "Admin access required" };
+            return;
+        }
+        
+        // Get the user ID from the URL parameter
+        const userId = ctx.params.id;
+        if (!userId) {
+            ctx.response.status = 400;
+            ctx.response.body = { message: "User ID is required" };
+            return;
+        }
+        
+        // Don't allow admin to delete their own account (safety measure)
+        if (Number(userId) === admin.id) {
+            ctx.response.status = 400;
+            ctx.response.body = { message: "Admin cannot delete their own account" };
+            return;
+        }
+        
+        // Delete the user
+        const success = await deleteUserById(Number(userId));
+        
+        if (success) {
+            ctx.response.status = 200;
+            ctx.response.body = { message: "User deleted successfully" };
+            console.log(`[ADMIN] User ${userId} deleted by admin ${admin.name}`);
+        } else {
+            ctx.response.status = 404;
+            ctx.response.body = { message: "User not found or could not be deleted" };
+        }
+    } catch (error) {
+        console.error("Error removing user:", error);
+        ctx.response.status = 500;
+        ctx.response.body = { message: "Failed to delete user", error: error.message };
+    }
+}
+

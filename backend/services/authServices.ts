@@ -20,10 +20,10 @@ export async function validateCredentials(
 const secret = new TextEncoder().encode("b9a1f5e0-3d92-4ebc-abc1-07f2c5e3a3d9");
 
 export async function createJWT(user: User): Promise<string> {
-    const jwt = await new SignJWT({ name: user.username, id: user.id })
+    const jwt = await new SignJWT({ name: user.username, id: user.id, role: user.role })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .setExpirationTime("2h")
+        .setExpirationTime("365d")
         .sign(secret);
     return jwt;
 }
