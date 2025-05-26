@@ -211,10 +211,68 @@ ul{
     position: relative;
     padding-left: 1.4rem;
 }
+
 .profile a {
     color: var(--color-secondary);
     text-decoration: none;
-    font-size: 20px;
+    font-size: 20px; /* Match size of cart and wishlist icons */
+}
+
+/* Fix dropdown to appear above all content */
+.profile-dropdown {
+    position: absolute;
+    top: 100%;
+    right: -10px;
+    background-color: var(--color-white-1);
+    min-width: 100px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 8px 0;
+    z-index: 9999; /* Increased z-index to ensure it appears on top */
+    display: none;
+    margin-top: 10px;
+}
+
+.profile-dropdown a {
+    color: var(--color-secondary);
+    padding: 8px 15px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.profile-dropdown a i {
+    margin-right: 8px;
+    font-size: 16px; /* Better icon size */
+}
+
+.profile-dropdown a:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #e5e5e5;
+    margin: 5px 0;
+}
+
+/* Show dropdown when profile is clicked */
+.profile.active .profile-dropdown {
+    display: block;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 .header_container{
     width: 100%;

@@ -120,8 +120,45 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Rest of your DOMContentLoaded code...
   const profileLink = document.getElementById('profile-link');
+  const profile = document.querySelector('.profile');
+  
   if (profileLink) {
-    profileLink.addEventListener('click', handleProfileClick);
+      profileLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          profile.classList.toggle('active');
+          
+          // Close dropdown when clicking outside
+          document.addEventListener('click', function closeDropdown(e) {
+              if (!profile.contains(e.target)) {
+                  profile.classList.remove('active');
+                  document.removeEventListener('click', closeDropdown);
+              }
+          });
+      });
+  }
+  
+  // Handle profile option click - garde la même fonction que vous avez déjà
+  const profileOption = document.getElementById('profile-option');
+  if (profileOption) {
+      profileOption.addEventListener('click', function(e) {
+          e.preventDefault();
+          handleProfileClick(e);
+      });
+  }
+  
+  // Handle logout
+  const logoutLink = document.getElementById('logout-link');
+  if (logoutLink) {
+      logoutLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Clear cookies and local storage
+          document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          localStorage.removeItem('user');
+          
+          // Redirect to login page
+          window.location.href = 'login.html';
+      });
   }
 });
 
