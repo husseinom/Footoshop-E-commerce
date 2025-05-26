@@ -88,7 +88,7 @@ async function addToWishlist(product) {
       showToast('Product added to wishlist!');
     } catch (error) {
       console.error('Error adding to wishlist:', error);
-      showToast('Failed to add product to wishlist');
+      showToast('Failed to add product to wishlist, maybe item already exists');
     }
 }
 

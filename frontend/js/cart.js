@@ -22,13 +22,13 @@ async function fetchCartFromServer() {
         }
         
         const data = await response.json();
-        console.log("Cart data from server:", data);
+        // console.log("Cart data from server:", data);
         
         // Check if we have valid cart data
         if (data && data.cart && Array.isArray(data.cart)) {
             // Update local cart with server data
             cart = data.cart;
-            console.log("Cart updated from server:", cart);
+            // console.log("Cart updated from server:", cart);
             
             // Update UI
             displayCartItems();
@@ -236,7 +236,14 @@ function displayCartItems() {
 
     let totalAmount = 0;
     if (cart.length === 0) {
-        cartContainer.innerHTML = '<p>Your cart is empty!</p>';
+        // Updated empty cart message with better styling
+        cartContainer.innerHTML = `
+            <div class="empty-container">
+                <i class="fas fa-shopping-cart empty-icon"></i>
+                <p class="empty-message">Your cart is empty!</p>
+                <a href="allproducts.html" class="continue-shopping-btn">Continue Shopping</a>
+            </div>
+        `;
         cartTotalElement.textContent = 'Total: $0.00';
     } else {
         cart.forEach((item, index) => {

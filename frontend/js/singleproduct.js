@@ -8,7 +8,7 @@ async function loadProductDetails(productId) {
         if (!response.ok) throw new Error("Product not found");
 
         const productArray = await response.json(); // it's an array
-        console.log("Product Details:", productArray);
+        // console.log("Product Details:", productArray);
 
         if (!Array.isArray(productArray) || productArray.length === 0) {
             throw new Error("No product data");

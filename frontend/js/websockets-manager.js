@@ -39,7 +39,7 @@ function initWebSocket() {
       setTimeout(() => {
         try {
           if (socket && socket.readyState === WebSocket.OPEN) {
-            console.log("Sending hello message");
+            // console.log("Sending hello message");
             // Send a "hello" message to identify as a regular user
             socket.send(JSON.stringify({
               type: 'hello',
@@ -50,7 +50,7 @@ function initWebSocket() {
             // Start heartbeat
             startHeartbeat();
           } else {
-            console.warn("Socket closed before we could send hello message");
+            // console.warn("Socket closed before we could send hello message");
           }
         } catch (err) {
           console.error("Error sending initial hello message:", err);
@@ -61,7 +61,7 @@ function initWebSocket() {
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        console.log("WebSocket message received:", data);
+        // console.log("WebSocket message received:", data);
         
         // Dispatch custom event for other components to listen to
         document.dispatchEvent(new CustomEvent('websocket-message', {
@@ -70,9 +70,9 @@ function initWebSocket() {
         
         // Handle specific message types
         if (data.type === "welcome") {
-          console.log("WebSocket welcome message:", data);
+          // console.log("WebSocket welcome message:", data);
         } else if (data.type === "heartbeat") {
-          console.log("Heartbeat received from server");
+          // console.log("Heartbeat received from server");
         } else if (data.type === "error") {
           console.error("WebSocket error from server:", data.message);
         }
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log("Auth cookie found, initializing WebSocket");
       initWebSocket();
     } else {
-      console.log("No auth cookie found, skipping WebSocket initialization");
+      // console.log("No auth cookie found, skipping WebSocket initialization");
     }
   }
 });
