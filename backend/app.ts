@@ -27,13 +27,13 @@ const wsRouter = createWebSocketRouter();
 const allowedOrigins = [
   "http://localhost:5501",
   "http://127.0.0.1:5501",
-  // Add your Render frontend URL here after deployment
-  // "https://your-frontend-app.onrender.com"
+  // Fly.io frontend URL
+  "https://footoshop-frontend.fly.dev"
 ];
 
 // If in production, add the production origin
 if (Deno.env.get("DENO_DEPLOY") === "true") {
-  // You can set this as an environment variable on Render
+  // You can set this as an environment variable on Fly.io
   const frontendUrl = Deno.env.get("FRONTEND_URL");
   if (frontendUrl) {
     allowedOrigins.push(frontendUrl);

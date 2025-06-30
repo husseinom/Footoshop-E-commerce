@@ -1,9 +1,6 @@
-FROM denoland/deno:alpine-1.44.4
+FROM denoland/deno:1.44.4
 
 WORKDIR /app
-
-# Copy package files first
-COPY deno.json ./
 
 # Copy source code
 COPY . .

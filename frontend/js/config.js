@@ -5,8 +5,8 @@ const config = {
     wsUrl: 'ws://localhost:4000/ws/connect'
   },
   production: {
-    apiUrl: 'https://footoshop-backend.onrender.com',
-    wsUrl: 'wss://footoshop-backend.onrender.com/ws/connect'
+    apiUrl: 'https://footoshop-backend.fly.dev',
+    wsUrl: 'wss://footoshop-backend.fly.dev/ws/connect'
   }
 };
 
