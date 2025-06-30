@@ -23,3 +23,9 @@ function createProductCard(product) {
         </div>
     `;
 }
+
+// API utility function
+function getApiUrl(endpoint) {
+    const baseUrl = window.APP_CONFIG ? window.APP_CONFIG.apiUrl : 'http://localhost:4000';
+    return `${baseUrl}${endpoint}`;
+}

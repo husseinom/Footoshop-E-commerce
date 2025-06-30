@@ -47,7 +47,7 @@ ScrollReveal().reveal(".footer", {
 
 async function loadLatestProducts() {
   try {
-    const response = await fetch("http://localhost:4000/products/latest?limit=10" ,{
+    const response = await fetch(window.API_BASE_URL + "/products/latest?limit=10", {
       method: 'GET',
       headers: { 'Content-Type': 'application/json',
        },
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Simple function to handle profile click
 async function handleProfileClick(event) {
   try {
-    const response = await fetch("http://localhost:4000/admin", {
+    const response = await fetch(window.API_BASE_URL + "/admin", {
       method: "GET",
       mode: "cors",
       headers: {

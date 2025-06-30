@@ -14,7 +14,7 @@ async function onSubmit() {
     let password = document.getElementById("sign-in-password").value;
 
     try {
-        const response = await fetch("http://localhost:4000/login", {
+        const response = await fetch(window.API_BASE_URL + "/login", {
             method: 'POST',
             mode: 'cors',
             headers: { 'Content-Type': 'application/json' },

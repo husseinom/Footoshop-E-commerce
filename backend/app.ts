@@ -8,7 +8,7 @@ import { createWebSocketRouter } from "./services/Websockets.ts"; // Import the 
 
 const app = new Application();
 
-const port = parseInt(Deno.env.get("PORT") ?? "8000");
+const port = parseInt(Deno.env.get("PORT") ?? "4000");
 
 const options: Deno.ListenOptions = { port };
 

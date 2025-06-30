@@ -19,8 +19,12 @@ function initWebSocket() {
   try {
     console.log("Initializing user WebSocket connection...");
     
+    // Use config for WebSocket URL
+    const wsUrl = window.WS_URL || 'ws://localhost:4000/ws/connect';
+    console.log("Connecting to:", wsUrl);
+    
     // Connect to the WebSocket endpoint - cookie auth will handle identification
-    socket = new WebSocket('ws://localhost:4000/ws/connect');
+    socket = new WebSocket(wsUrl);
     
     // Add connection timeout to detect stalled connections
     const connectionTimeout = setTimeout(() => {
