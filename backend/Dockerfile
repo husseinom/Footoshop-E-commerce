@@ -1,16 +1,12 @@
-FROM denoland/deno:latest
+FROM denoland/deno:1.45.0
 
-# Set the working directory
 WORKDIR /app
 
-# Copy the application
+# Copy all source files
 COPY . .
 
-# Cache the main application and dependencies
-RUN deno cache app.ts
-
-# Expose the port
+# Expose port
 EXPOSE 4000
 
-# Run the application
-CMD ["deno", "run", "--allow-net", "--allow-read", "--allow-write", "app.ts"]
+# Run the application (let Deno handle dependency resolution at runtime)
+CMD ["deno", "run", "--allow-all", "app.ts"]
