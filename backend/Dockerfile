@@ -1,12 +1,15 @@
-FROM denoland/deno:1.45.0
+FROM denoland/deno:alpine-1.44.4
 
 WORKDIR /app
 
-# Copy all source files
+# Copy package files first
+COPY deno.json ./
+
+# Copy source code
 COPY . .
 
 # Expose port
 EXPOSE 4000
 
-# Run the application (let Deno handle dependency resolution at runtime)
+# Start the application
 CMD ["deno", "run", "--allow-all", "app.ts"]
