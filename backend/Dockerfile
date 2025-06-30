@@ -1,18 +1,12 @@
-FROM denoland/deno:1.40.0
+FROM denoland/deno:latest
 
 # Set the working directory
 WORKDIR /app
 
-# Copy dependency files first for better caching
-COPY deno.json deno.lock ./
-
-# Cache dependencies
-RUN deno cache --lock=deno.lock deno.json
-
-# Copy the rest of the application
+# Copy the application
 COPY . .
 
-# Cache the main application
+# Cache the main application and dependencies
 RUN deno cache app.ts
 
 # Expose the port
