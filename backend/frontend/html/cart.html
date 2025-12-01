@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/scrollreveal"></script>
-    <title>Wishlist</title>
+    <title>Cart</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -29,8 +29,8 @@
                 <li class="nav_item"><a href="allproducts.html?CategoryId=2" class="nav_link">Women</a></li>
                 <li class="nav_item"><a href="allproducts.html?CategoryId=3" class="nav_link">Kids</a></li>
                 <!-- <li class="nav_item"><a href="#" class="header_filter_limited">Limited Offers</a></li> -->
-                <!-- <li class="nav_item dropdown"> -->
-                    <!-- <a href="#" class="nav_link">Categories <i class="fas fa-chevron-down"></i></a>
+                <!-- <li class="nav_item dropdown">
+                    <a href="#" class="nav_link">Categories <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Running</a></li>
                         <li><a href="#">Lifestyle</a></li>
@@ -54,7 +54,7 @@
                             <span class="wishlist-count">0</span>
                         </a>
                     </div>
-                    <div class="cart">
+                    <div class="cart" onclick="displayCartItems()">
                         <a href="cart.html">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="cart-count">0</span>
@@ -79,17 +79,26 @@
     </nav>
     <section class="section">
         <div class="container">
-            <div class="wishlist">
-                <div class="wishlist_header">
-                    <p class="wishlist_header_title">Product title</p>
-                    <p class="wishlist_header_title">Product image</p>
-                    <p class="wishlist_header_title">Price</p>
+            <div class="cart-page">
+                <div class="cart-page_header">
+                    <p class="cart_header_title">Product title</p>
+                    <p class="cart_header_title">Product image</p>
+                    <p class="cart_header_title">Price</p>
+                    <p class="cart_header_title">Size</p>
+                    <p class="cart_header_title">Quantity</p>
+                    <p class="cart_header_title">SubTotal</p>
                 </div>
-                <div class="wishlist-items-container" style="min-height: 300px;"></div>
+    
+                <!-- Dynamic items go here -->
+                <div class="cart-items-container"></div>
+    
+                <div class="cart_total">
+                    <p class="cart_total_p">Total: 0.00$</p>
+                </div>
             </div>
         </div>
     </section>
-    <footer class="footer_wishlist">
+    <footer class="footer_cart">
         <div class="container footer_container">
             <div class="footer_item">
                 <a href="#" class="footer_logo">Footoshop</a>
@@ -135,11 +144,13 @@
             
         </div>
     </footer>
-    <script src="../js/main.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/websockets-manager.js"></script>
     <script src="../js/cart.js"></script>
-    <script src="../js/utils.js"></script>
     <script src="../js/wishlist.js"></script>
+    <script src="../js/main.js"></script>
+    
 
 </body>
 </html>

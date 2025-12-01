@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/scrollreveal"></script>
-    <title>Wishlist</title>
+    <title>All Products</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
     <div class="top_nav">
@@ -24,43 +24,25 @@
         <div class="container nav_container">
             <a href="main.html" class="nav_logo">FOOTOSHOP</a>
             <ul class="nav_list">
-                <li class="nav_item"><a href="main.html" class="nav_link">Home</a></li>
-                <li class="nav_item"><a href="allproducts.html?CategoryId=1" class="nav_link">Men</a></li>
-                <li class="nav_item"><a href="allproducts.html?CategoryId=2" class="nav_link">Women</a></li>
-                <li class="nav_item"><a href="allproducts.html?CategoryId=3" class="nav_link">Kids</a></li>
-                <!-- <li class="nav_item"><a href="#" class="header_filter_limited">Limited Offers</a></li> -->
-                <!-- <li class="nav_item dropdown"> -->
-                    <!-- <a href="#" class="nav_link">Categories <i class="fas fa-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Running</a></li>
-                        <li><a href="#">Lifestyle</a></li>
-                        <li><a href="#">Sneakers</a></li>
-                        <li><a href="#">Sports</a></li>
-                    </ul>  -->
-                <!-- </li> -->
-                <!-- <form action="#" class="nav_form">
+                <form action="#" class="nav_form">
                     <input type="text" class="nav_input" placeholder="What are you looking for?">
                     <i class="fas fa-search"></i>
-                </form> -->
-                <!-- <li class="nav_item"><a href="#" class="nav_link_limited">Limited Offers</a></li> -->
-                <!-- <li class="nav_item"><a href="#" class="nav_link">Login/Register</a></li> -->
+                </form>
             </ul>
             <div class="nav_items">
-                
-                
-                    <div class="wishlist">
-                        <a href="wishlist.html">
-                            <i class="fas fa-heart"></i>
-                            <span class="wishlist-count">0</span>
-                        </a>
-                    </div>
-                    <div class="cart">
-                        <a href="cart.html">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-count">0</span>
-                        </a>
-                    </div>
-                    <div class="profile">
+                <div class="wishlist">
+                    <a href="wishlist.html">
+                        <i class="fas fa-heart"></i>
+                        <span class="wishlist-count">0</span>
+                    </a>
+                </div>
+                <div class="cart" onclick="displayCartItems()">
+                    <a href="cart.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+                <div class="profile">
                         <a href="#" id="profile-link">
                             <i class="fas fa-user"></i>
                         </a>
@@ -70,26 +52,53 @@
                             <a href="login.html" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
                         </div>
                     </div>
-                    
-                </a>
-                
-                
             </div>
         </div>
     </nav>
-    <section class="section">
-        <div class="container">
-            <div class="wishlist">
-                <div class="wishlist_header">
-                    <p class="wishlist_header_title">Product title</p>
-                    <p class="wishlist_header_title">Product image</p>
-                    <p class="wishlist_header_title">Price</p>
-                </div>
-                <div class="wishlist-items-container" style="min-height: 300px;"></div>
+    <section class="all_products_container">
+        <div id="filterSidebar" class="sidebar">
+            <h3>Filter</h3>
+          
+            <div class="filter-section">
+              <h4>Categories</h4>
+              <div id="categoryFilters">
+                <!-- Populated dynamically -->
+              </div>
             </div>
+          
+            <div class="filter-section">
+              <h4>Subcategories</h4>
+              <div id="subCategoryFilters">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          
+            <div class="filter-section">
+              <h4>Price</h4>
+              <label>Min: <span id="minPriceValue">20</span></label>
+              <input type="range" id="minPrice" min="20" max="500" value="20" step="10">
+              <label>Max: <span id="maxPriceValue">500</span></label>
+              <input type="range" id="maxPrice" min="20" max="500" value="500" step="10">
+            </div>
+          
+            <div class="filter-section">
+              <h4>Size</h4>
+              <label>Min: <span id="minSizeValue">0</span></label>
+              <input type="range" id="minSize" min="30" max="50" value="30" step="1">
+              <label>Max: <span id="maxSizeValue">50</span></label>
+              <input type="range" id="maxSize" min="30" max="50" value="50" step="1">
+            </div>
+          
+            <button onclick="applyFilters()">Apply Filters</button>
         </div>
+
+        <!-- Swiper Wrapper for displaying products -->
+        <div id="productGrid"></div>
+    <!-- Dynamic product cards will be injected here -->
+        
     </section>
-    <footer class="footer_wishlist">
+
+    <footer class="footer_cart">
         <div class="container footer_container">
             <div class="footer_item">
                 <a href="#" class="footer_logo">Footoshop</a>
@@ -128,18 +137,18 @@
         </div>
         <div class="footer_bottom">
             <div class="footer_bottom_container">
-                <p class="footer_bottom_p">Copyright &copy; 2025 Footoshop. All rights reserved.
-                </p>
-                
+                <p class="footer_bottom_p">Copyright &copy; 2025 Footoshop. All rights reserved.</p>
             </div>
-            
         </div>
     </footer>
-    <script src="../js/main.js"></script>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/websockets-manager.js"></script>
     <script src="../js/cart.js"></script>
-    <script src="../js/utils.js"></script>
     <script src="../js/wishlist.js"></script>
-
+    <script src="../js/allproducts.js"></script>
+    <script src="../js/main.js"></script>
+    
 </body>
 </html>

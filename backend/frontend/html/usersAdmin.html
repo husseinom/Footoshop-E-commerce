@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashbord</title>
+    <title>Users Admin - Dashboard</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
@@ -37,11 +37,6 @@
               <i class="fa-solid fa-angle-down dropdown-icon"></i>
             </div>
             <div class="profile-dropdown">
-              <!-- <a href="#"><i class="fa-solid fa-gear"></i> Settings</a> -->
-              <!-- <a href="#"
-                ><i class="fa-solid fa-envelope"></i> Messages
-                <span class="badge">3</span></a
-              > -->
               <div class="dropdown-divider"></div>
               <a href="login.html"
                 ><i class="fa-solid fa-right-from-bracket"></i> Logout</a
@@ -58,7 +53,7 @@
             <span>Admin Panel</span>
           </div>
           <ul class="menu-items">
-            <li class="menu-item active">
+            <li class="menu-item">
               <a href="admin.html">
                 <i class="fa-solid fa-house"></i>
                 <span>Dashboard</span>
@@ -75,7 +70,7 @@
                 <!-- <li><a href="#">Categories</a></li> -->
               </ul>
             </li>
-            <li class="menu-item has-submenu">
+            <li class="menu-item active has-submenu">
               <a href="#">
                 <i class="fa-solid fa-users"></i>
                 <span>Users</span>
@@ -83,35 +78,8 @@
               </a>
               <ul class="submenu">
                 <li><a href="usersAdmin.html">All Users</a></li>
-                
               </ul>
             </li>
-            <!-- <li class="menu-item">
-              <a href="#">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Analytics</span>
-              </a>
-            </li> -->
-            <!-- <li class="menu-item">
-              <a href="#">
-                <i class="fa-solid fa-envelope"></i>
-                <span>Messages</span>
-                <span class="badge">5</span>
-              </a>
-            </li> -->
-            <!-- <li class="menu-item has-submenu">
-              <a href="#">
-                <i class="fa-solid fa-gear"></i>
-                <span>Settings</span>
-                <i class="fa-solid fa-angle-down dropdown-icon"></i>
-              </a>
-              <ul class="submenu">
-                <li><a href="#">General</a></li>
-                <li><a href="#">Security</a></li>
-                <li><a href="#">Notifications</a></li>
-                <li><a href="#">Appearance</a></li>
-              </ul>
-            </li> -->
             <li class="menu-item">
               <a href="main.html">
                 <i class="fa-solid fa-shoe-prints"></i>
@@ -121,16 +89,31 @@
           </ul>
         </div>
       </aside>
-  <div class="main-content" id="mainContent">
-    <h1>All Products</h1>
-    <div id="product-list" class="product-list"></div> <!-- This is where the products will be displayed -->
-  </div>
-  <script src="../js/admin.js" defer></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      fetchAllProducts(); // Only run if the table exists
-    });
-  </script>
-  <script src="../js/utils.js"></script>
-</body>
+
+      <div class="main-content" id="mainContent">
+        <h1>All Users</h1>
+        
+        <!-- Connected Users Section -->
+        <div class="card">
+          <h3>Connected Users</h3>
+          <div id="connected-users-list" class="product-list">
+            <!-- Connected users will appear here -->
+            <p>No users currently connected</p>
+          </div>
+        </div>
+        
+        <!-- Registered Users Section -->
+        <div class="card">
+          <h3>Registered Users</h3>
+          <div id="users-list" class="product-list">
+            <!-- Registered users will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/websockets-manager.js"></script>
+    <script src="../js/admin.js" defer></script>
+  </body>
 </html>

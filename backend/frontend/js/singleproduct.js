@@ -1,3 +1,6 @@
+// Store product data globally for cart/wishlist operations
+let currentProductData = null;
+
 async function loadProductDetails(productId) {
     try {
         const response = await fetch(getApiUrl(`/product/${productId}`), {
@@ -16,6 +19,15 @@ async function loadProductDetails(productId) {
 
         // Use the first variant for common fields
         const firstProduct = productArray[0];
+        
+        // Store product data globally
+        currentProductData = {
+            id: firstProduct.id,
+            title: firstProduct.title,
+            price: firstProduct.actual_price,
+            image_path: firstProduct.image_path,
+            productArray: productArray
+        };
 
         // Fill HTML elements if they exist on the page
         const titleEl = document.getElementById("productTitle");
@@ -29,7 +41,10 @@ async function loadProductDetails(productId) {
         if (titleEl) titleEl.textContent = firstProduct.title;
         if (priceEl) priceEl.textContent = `${firstProduct.actual_price} €`;
         if (descEl) descEl.textContent = firstProduct.description ?? "No description available.";
-        if (imageEl) imageEl.src = `../../backend/${firstProduct.image_path}`;
+        if (imageEl) {
+            // Fix image path to work in both dev and production
+            imageEl.src = getImageUrl(firstProduct.image_path);
+        }
 
         // Populate sizes from product array
         if (sizeSelect) {
@@ -132,13 +147,19 @@ document.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
       const selectedSize = document.getElementById("size_product")?.value;
       const selectedQuantity = document.getElementById("quantity")?.value;
+      
+      if (!currentProductData) {
+        console.error('Product data not loaded');
+        return;
+      }
+      
       const product = {
-        product_id: productId,
-        title: button.dataset.title,
-        price: parseFloat(button.dataset.price),
-        image: button.dataset.image,
+        product_id: currentProductData.id,
+        title: currentProductData.title,
+        price: parseFloat(currentProductData.price),
+        image_path: currentProductData.image_path,
         quantity: selectedQuantity,
-        size: selectedSize, // Assuming sizeSelect is defined in the scope
+        size: selectedSize,
       };
         console.log(product);
 
@@ -154,13 +175,16 @@ document.querySelectorAll('.add-wishlist').forEach(button => {
     e.preventDefault();
     e.stopPropagation();
     
-    const params = new URLSearchParams(window.location.search);
-    const productId = params.get("id");
+    if (!currentProductData) {
+      console.error('Product data not loaded');
+      return;
+    }
+    
     const product = {
-      product_id: productId,
-      title: button.dataset.title,
-      price: parseFloat(button.dataset.price),
-      image: button.dataset.image,
+      product_id: currentProductData.id,
+      title: currentProductData.title,
+      price: parseFloat(currentProductData.price),
+      image: currentProductData.image,
     };
 
     if (typeof addToWishlist === 'function') {

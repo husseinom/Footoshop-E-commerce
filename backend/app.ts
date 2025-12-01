@@ -1,5 +1,6 @@
 import "./database/tables.db.ts"
-import { Application} from "https://deno.land/x/oak@v17.1.4/mod.ts";
+import { Application, Router } from "https://deno.land/x/oak@v17.1.4/mod.ts";
+import { send } from "https://deno.land/x/oak@v17.1.4/send.ts";
 import { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
 import authRoute from "./routes/authRoute.ts";
 import { validateJWT } from "./middleware/validate.ts";
@@ -23,6 +24,62 @@ console.log(`Oak back server running on port ${options.port}`);
 
 const wsRouter = createWebSocketRouter();
 
+// Create a router for static files
+const staticRouter = new Router();
+
+// Serve static files from the frontend directory
+staticRouter.get("/(.*)", async (ctx) => {
+  const path = ctx.params[0] || "";
+  
+  // If it's an API request, skip static serving
+  if (path.startsWith("api/") || path.startsWith("ws")) {
+    return;
+  }
+  
+  try {
+    let filePath = path;
+    let rootDir = "./frontend";
+    
+    // Handle assets folder specially (for uploaded product images)
+    if (path.startsWith("assets/")) {
+      rootDir = "./";
+      filePath = path;
+    }
+    // Handle static folder specially (for frontend static assets)
+    else if (path.startsWith("static/")) {
+      rootDir = "./frontend";
+      filePath = path;
+    }
+    // Default to main.html for root or directory requests
+    else if (!path || path.endsWith("/")) {
+      filePath = "html/main.html";
+    }
+    // If it's a .html file, serve it directly
+    else if (path.endsWith(".html")) {
+      filePath = `html/${path}`;
+    }
+    // If no extension, assume it's an HTML page
+    else if (!path.includes(".")) {
+      filePath = `html/${path}.html`;
+    }
+    
+    await send(ctx, filePath, {
+      root: rootDir,
+      index: "html/main.html",
+    });
+  } catch {
+    // If file not found, serve main.html (for client-side routing)
+    try {
+      await send(ctx, "html/main.html", {
+        root: "./frontend",
+      });
+    } catch {
+      ctx.response.status = 404;
+      ctx.response.body = "Not Found";
+    }
+  }
+});
+
 // Configure CORS for both development and production
 const allowedOrigins = [
   "http://localhost:5501",
@@ -44,11 +101,17 @@ app.use(oakCors({
   origin: allowedOrigins,
   credentials: true
 }))
+
+// API routes first
 app.use(authRoute.routes());
 app.use(authRoute.allowedMethods())
 
 app.use(wsRouter.routes());
 app.use(wsRouter.allowedMethods());
+
+// Static files last (catch-all)
+app.use(staticRouter.routes());
+app.use(staticRouter.allowedMethods());
 
 Deno.addSignalListener("SIGINT", () => {
     console.log("Shutting down server...");

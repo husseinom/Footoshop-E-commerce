@@ -143,7 +143,7 @@ function displayWishlistItems() {
             const wishlistItemHTML = `
                 <div class="wishlist_item">
                     <span class="wishlist_item_title">${item.product.title}</span>
-                    <img src="../../backend/${item.product.image_path}" alt="${item.product.title}" class="wishlist_img">
+                    <img src="${getImageUrl(item.product.image_path)}" alt="${item.product.title}" class="wishlist_img">
                     <i class="fa-solid fa-trash remove_btn" data-id="${item.product.id}" data-size="${item.size}" style="cursor: pointer;"></i>
                     <div class="wishlist_item_price">${item.product.actual_price}$</div>
                     

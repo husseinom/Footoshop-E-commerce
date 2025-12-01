@@ -253,7 +253,7 @@ function displayCartItems() {
             const cartItemHTML = `
                 <div class="cart_item">
                     <span class="cart_item_title">${item.product.title}</span>
-                    <img src="../../backend/${item.product.image_path}" alt="${item.product.title}" class="cart_img">
+                    <img src="${getImageUrl(item.product.image_path)}" alt="${item.product.title}" class="cart_img">
                     <div class="cart_item_price">${item.product.actual_price}$</div>
                     <div class="cart_item_size">${item.size}</div>
                     <div class="quantity-control">

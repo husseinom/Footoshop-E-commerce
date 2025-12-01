@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/scrollreveal"></script>
-    <title>Wishlist</title>
+    <title>Footoshop</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -29,8 +29,12 @@
                 <li class="nav_item"><a href="allproducts.html?CategoryId=2" class="nav_link">Women</a></li>
                 <li class="nav_item"><a href="allproducts.html?CategoryId=3" class="nav_link">Kids</a></li>
                 <!-- <li class="nav_item"><a href="#" class="header_filter_limited">Limited Offers</a></li> -->
-                <!-- <li class="nav_item dropdown"> -->
-                    <!-- <a href="#" class="nav_link">Categories <i class="fas fa-chevron-down"></i></a>
+                <form action="#" class="nav_form_product_page">
+                    <input type="text" class="nav_input_product_page" placeholder="What are you looking for?">
+                    <i class="fas fa-search"></i>
+                </form>
+                <!-- <li class="nav_item dropdown">
+                    <a href="#" class="nav_link">Categories <i class="fas fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Running</a></li>
                         <li><a href="#">Lifestyle</a></li>
@@ -54,7 +58,7 @@
                             <span class="wishlist-count">0</span>
                         </a>
                     </div>
-                    <div class="cart">
+                    <div class="cart" onclick="displayCartItems()">
                         <a href="cart.html">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="cart-count">0</span>
@@ -64,11 +68,6 @@
                         <a href="#" id="profile-link">
                             <i class="fas fa-user"></i>
                         </a>
-                        <div class="profile-dropdown">
-                            <a href="#" id="profile-option"><i class="fas fa-user-circle"></i> Profile</a>
-                            <div class="dropdown-divider"></div>
-                            <a href="login.html" id="logout-link"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
-                        </div>
                     </div>
                     
                 </a>
@@ -77,24 +76,48 @@
             </div>
         </div>
     </nav>
-    <section class="section">
-        <div class="container">
-            <div class="wishlist">
-                <div class="wishlist_header">
-                    <p class="wishlist_header_title">Product title</p>
-                    <p class="wishlist_header_title">Product image</p>
-                    <p class="wishlist_header_title">Price</p>
-                </div>
-                <div class="wishlist-items-container" style="min-height: 300px;"></div>
+    <div class="container_product_page">
+        <div class="product">
+            <div class="gallery">
+                <img id="productImage" src="" alt="">
+            </div>
+            <div class="details">
+                <!-- Product Details -->
+                <h1 id="productTitle"></h1>
+                <h2 id="productPrice"></h2>
+                <p id="productDescription"></p>
+                <form action="">
+                    <div class="size-select">
+                        <label for="size_product">Select Size</label>
+                        <select id="size_product" name="size" required>
+                            <!-- Fill the options with backend data -->
+                        </select>
+                    </div>
+                    <div class="quantity-select">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1">
+                    </div>
+                    <div class="product-btn-group">
+                        <div class="button add-cart">
+                            <i class="fas fa-shopping-cart"></i> Add To Cart
+                        </div>
+                        <div class="button add-wishlist">
+                            <i class="fas fa-heart"></i> Add To Wishlist
+                        </div>
+                    </div>
+                    
+                </form>
+
+                <!-- Product Details -->
             </div>
         </div>
-    </section>
-    <footer class="footer_wishlist">
+    </div>
+    <footer class="footer">
         <div class="container footer_container">
             <div class="footer_item">
                 <a href="#" class="footer_logo">Footoshop</a>
                 <div class="footer_p">
-                    Official website created by 3rd Year student in Polytech Montpellier, France to buy and sell shoes online. 
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta in, nesciunt obcaecati odio nulla sapiente cum quis voluptate officiis reiciendis accusantium magni fuga laboriosam aut quas vero mollitia iste expedita!
                     <div class="footer_bottom_icons">
                         <a href="#" class="footer_bottom_icon"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="footer_bottom_icon"><i class="fab fa-instagram"></i></a>
@@ -135,11 +158,13 @@
             
         </div>
     </footer>
-    <script src="../js/main.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/websockets-manager.js"></script>
     <script src="../js/cart.js"></script>
-    <script src="../js/utils.js"></script>
     <script src="../js/wishlist.js"></script>
-
+    <script src="../js/singleproduct.js"></script>
+    <script src="../js/main.js"></script>
+    
 </body>
 </html>
